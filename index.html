@@ -3,8 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Капитал-Сити</title>
+    <title>Финанс-Сити</title>
+    <!-- Подключение Telegram Web App -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script>
+      // Простая инициализация Telegram Mini App
+      if (window.Telegram?.WebApp) {
+        Telegram.WebApp.ready();
+        Telegram.WebApp.expand(); // разворачиваем на весь экран
+      }
+    </script>
     <style>
+        /* ========== СТИЛИ ========== */
         * {
             margin: 0;
             padding: 0;
@@ -14,7 +24,7 @@
 
         body {
             background: #0b1423;
-            padding: 8px;
+            padding: 10px;
             min-height: 100vh;
             display: flex;
             align-items: flex-start;
@@ -27,283 +37,3163 @@
             background: #132a40;
             border-radius: 24px;
             border: 1px solid #ffd700;
-            padding: 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            overflow: hidden;
+            max-height: 98vh;
         }
 
-        /* Верхняя панель */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #132a40;
+            padding: 10px 15px 5px 15px;
+        }
+
         .header {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
+            gap: 6px;
             background: #1e3750;
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 8px 12px;
             border: 1px solid #4a7a9c;
         }
 
         .title {
-            font-size: 20px;
+            font-size: 24px;
             font-weight: 800;
             color: #ffd700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         .resources {
             display: flex;
+            justify-content: center;
             gap: 6px;
+            width: 100%;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 2px;
+        }
+        
+        .resources::-webkit-scrollbar {
+            display: none;
         }
 
         .resource {
+            display: flex;
+            align-items: center;
+            gap: 2px;
             background: #2a4a6a;
-            border-radius: 20px;
-            padding: 4px 8px;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
+            padding: 4px 6px;
+            border-radius: 16px;
             border: 1px solid #5f9dc9;
+            white-space: nowrap;
         }
 
-        /* Сетка для блоков */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+        .resource-icon {
+            font-size: 14px;
         }
 
-        .grid-4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
+        .resource-value {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .resource-limit {
+            font-size: 11px;
+            color: #a0d0ff;
+            margin-left: 1px;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 15px 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .content::-webkit-scrollbar {
+            display: none;
+            width: 0;
+        }
+
+        .resources-card {
+            background: #1e3750;
+            border-radius: 18px;
+            padding: 10px;
+            border: 1px solid #4a7a9c;
+        }
+
+        .resources-title {
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .resources-table {
+            display: flex;
+            flex-direction: column;
             gap: 4px;
         }
 
-        /* Карточки */
+        .table-header {
+            display: grid;
+            grid-template-columns: 100px 1fr 1fr 1fr;
+            background: #1e3f5a;
+            border: 1px solid #4a7a9c;
+            border-radius: 6px;
+            padding: 4px 6px;
+            margin-bottom: 2px;
+        }
+
+        .header-cell {
+            color: #a0d0ff;
+            font-size: 12px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .header-cell:first-child {
+            text-align: left;
+        }
+
+        .table-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 1fr 1fr;
+            align-items: center;
+            padding: 3px 6px;
+            font-size: 13px;
+        }
+
+        .resource-name {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #a0d0ff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .resource-name .icon {
+            font-size: 18px;
+        }
+
+        .income-value {
+            color: #32cd32;
+            font-weight: 600;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .expense-value {
+            color: #ff6b6b;
+            font-weight: 600;
+            text-align: center;
+            font-size: 13px;
+        }
+
+        .profit-value {
+            color: #ffd700;
+            font-weight: 600;
+            text-align: center;
+            font-size: 13px;
+        }
+
         .card {
             background: #1e3750;
-            border-radius: 16px;
-            padding: 10px;
+            border-radius: 18px;
+            padding: 12px;
             border: 1px solid #4a7a9c;
         }
 
         .card-title {
             color: #ffd700;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            border-bottom: 1px solid #ffd700;
-            padding-bottom: 2px;
+            font-size: 18px;
+            font-weight: 800;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        /* Город - ОЧЕНЬ МАЛЕНЬКИЙ */
+        .storage-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .storage-item {
+            background: #2a4a6a;
+            border-radius: 10px;
+            padding: 8px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            border: 1px solid #5f9dc9;
+            min-height: 70px;
+        }
+
+        .storage-icon {
+            font-size: 24px;
+            line-height: 1;
+        }
+
+        .storage-name {
+            color: #a0d0ff;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .storage-value {
+            color: #ffd700;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
         .city-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 2px;
+            gap: 4px;
+            width: 100%;
         }
 
         .city-cell {
-            aspect-ratio: 1;
+            aspect-ratio: 1 / 1;
             background: #2a4f73;
-            border-radius: 4px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            border: 1px solid #ffd700;
+            padding: 0;
+            cursor: pointer;
+            min-width: 0;
+            width: 100%;
+            height: auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .city-cell.empty {
+            border: 1px solid #5f9dc9;
+        }
+
+        .city-cell:hover {
+            background: #3a6f9a;
+        }
+
+        .city-cell.in-construction {
+            opacity: 0.9;
+            border: 1px solid #ffd700;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .building-level-corner {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            background: #ffa500;
+            color: black;
+            font-size: 12px;
+            font-weight: 800;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            padding: 0 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
-            border: 1px solid #5f9dc9;
+            line-height: 1;
+            z-index: 10;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            white-space: nowrap;
         }
 
-        /* Финансы */
-        .finance-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            margin-bottom: 4px;
+        .building-level-corner.three-digit {
+            padding: 0 5px;
         }
 
-        .label { color: #a0d0ff; }
-        .income { color: #32cd32; font-weight: 600; }
-        .expense { color: #ff6b6b; font-weight: 600; }
-
-        /* Активы */
-        .asset-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            padding: 4px 0;
-            border-bottom: 1px solid #2a4a6a;
-        }
-
-        .asset-name { color: #a0d0ff; }
-        .asset-value { color: #ffd700; font-weight: 600; }
-
-        /* Биржа */
-        .stock-row {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            padding: 4px 0;
-            border-bottom: 1px solid #2a4a6a;
-        }
-
-        .stock-actions {
-            display: flex;
-            gap: 4px;
-        }
-
-        .stock-btn {
-            background: #2a4a6a;
-            border: 1px solid #5f9dc9;
-            border-radius: 4px;
-            padding: 2px 6px;
+        .construction-time {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0, 0, 0, 0.7);
+            color: #ffd700;
             font-size: 10px;
-            color: white;
+            font-weight: 700;
+            padding: 2px 4px;
+            border-radius: 4px;
+            z-index: 10;
+            border: 1px solid #ffd700;
         }
 
-        /* Армия */
+        .building-icon {
+            font-size: 22px;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 14px;
+            margin-bottom: 2px;
+            z-index: 1;
+        }
+
+        .building-name {
+            color: #ffd700;
+            font-size: 8px;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            width: 100%;
+            line-height: 1.2;
+            word-break: break-word;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            padding: 0 2px;
+            margin: 2px 0 4px 0;
+            letter-spacing: 0.2px;
+            max-height: 20px;
+        }
+
+        .empty-cell {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            font-size: 24px;
+            color: #a0d0ff;
+        }
+
+        .construction-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 0 0 8px 8px;
+            transition: width 0.1s linear;
+            z-index: 5;
+        }
+
+        .army-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .army-total {
+            background: #2a4a6a;
+            border: 1px solid #ffd700;
+            border-radius: 20px;
+            padding: 6px 15px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffd700;
+            text-transform: uppercase;
+        }
+
+        .army-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
         .unit-card {
             background: #2a4a6a;
-            border-radius: 8px;
-            padding: 6px;
+            border-radius: 12px;
+            padding: 8px; /* уменьшено с 10px */
             border: 1px solid #b49450;
+            position: relative;
+        }
+
+        .unit-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2px;
         }
 
         .unit-name {
             color: #ffd700;
             font-weight: 700;
-            font-size: 10px;
-            margin-bottom: 2px;
-        }
-
-        .unit-stats {
-            font-size: 8px;
-            color: #a0d0ff;
-            margin-bottom: 2px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            cursor: pointer;
         }
 
         .unit-count {
-            font-size: 12px;
+            background: #1e3f5a;
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 4px 10px;
+            font-size: 14px;
             font-weight: 700;
             color: white;
+            cursor: pointer;
+        }
+
+        .unit-capacity {
+            font-size: 10px;
+            color: #a0d0ff;
+            text-align: left; /* выровнено влево */
+            margin-bottom: 4px;
+            margin-top: -2px;
+            padding-left: 2px;
+        }
+
+        .unit-stats-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1e3f5a;
+            border-radius: 6px;
+            padding: 6px 8px;
+            margin-bottom: 4px; /* уменьшено с 8px */
+            font-size: 12px;
+        }
+
+        .unit-stats-row span {
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .unit-resources {
+            display: flex;
+            justify-content: space-around;
+            background: #1e3f5a;
+            border-radius: 6px;
+            padding: 6px 4px;
+            margin-bottom: 4px; /* уменьшено с 6px */
+            font-size: 11px;
+        }
+
+        .unit-resources span {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .resource-sufficient {
+            color: #a0d0ff;
+        }
+
+        .resource-insufficient {
+            color: #ff6b6b;
+        }
+
+        .unit-control {
+            display: flex;
+            flex-direction: column;
+            gap: 2px; /* уменьшено с 4px */
+        }
+
+        .counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px; /* уменьшено с 4px */
+        }
+
+        .counter-btn {
+            background: #3a5f7a;
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .counter-btn:active {
+            background: #4a7f9a;
+            transform: scale(0.95);
+        }
+
+        .counter-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .counter-input {
+            width: 45px;
+            text-align: center;
+            background: #1e3f5a;
+            border: 1px solid #ffd700;
+            border-radius: 5px;
+            padding: 4px 0;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .create-btn {
+            position: relative;
+            background: #2d5f7a; /* новый цвет */
+            border: 1px solid #ffd700;
+            border-radius: 6px;
+            padding: 4px 4px;
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+            text-align: center;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            text-transform: uppercase;
+            min-height: 40px; /* уменьшено с 46px */
+        }
+
+        .create-btn:active:not(:disabled) {
+            background: #3a6f9a;
+        }
+
+        .create-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .timer-progress {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: #7a6a3a;
+            opacity: 0.5;
+            width: 0%;
+            transition: width 0.1s linear;
+            z-index: 1;
+        }
+
+        .btn-content {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1px;
+            width: 100%;
+            line-height: 1.2;
+        }
+
+        .btn-time {
+            font-size: 11px;
+            color: #ffd700;
+            font-weight: 600;
+        }
+
+        /* УВЕЛИЧЕННОЕ НИЖНЕЕ МЕНЮ */
+        .bottom-menu {
+            position: sticky;
+            bottom: 0;
+            z-index: 100;
+            background: #1e3750;
+            border-top: 2px solid #ffd700;
+            display: flex;
+            justify-content: space-between;
+            align-items: stretch;
+            height: 70px;
+        }
+
+        .menu-btn {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-right: 2px solid #ffd700;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            padding: 0 2px;
+            transition: background 0.1s;
+        }
+
+        .menu-btn:last-child {
+            border-right: none;
+        }
+
+        .menu-btn:active {
+            background: #2a4a6a;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            filter: drop-shadow(0 2px 2px gold);
+        }
+
+        .menu-btn.shop .menu-icon,
+        .menu-btn.shop .menu-text {
+            color: #ffd700;
+        }
+
+        /* Стили для военных эффектов */
+        .upgrade-military-effect {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #87cefa;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #1e3750;
+            border-radius: 20px;
+            border: 2px solid #ffd700;
+            padding: 20px;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        .modal-title {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .modal-resources-header {
+            display: flex;
+            justify-content: space-around;
+            background: #2a4a6a;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+
+        .modal-resource-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .modal-resource-item span:first-child {
+            color: #a0d0ff;
+        }
+
+        .modal-input {
+            width: 100%;
+            background: #2a4a6a;
+            border: 1px solid #ffd700;
+            border-radius: 10px;
+            padding: 12px;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .modal-info {
+            background: #2a4a6a;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .modal-info-title {
+            color: #a0d0ff;
+            font-size: 12px;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .modal-resources {
+            display: flex;
+            justify-content: space-around;
+            background: #1e3f5a;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 8px;
+        }
+
+        .modal-resources span {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 12px;
+        }
+
+        .modal-time {
+            text-align: center;
+            color: #ffd700;
+            font-weight: 600;
+            font-size: 13px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+
+        .modal-btn.apply {
+            background: #5a4a2a;
+            color: white;
+        }
+
+        .modal-btn.cancel {
+            background: #4a2a2a;
+            color: white;
+        }
+
+        .modal-btn.apply:active {
+            background: #7a6a3a;
+        }
+
+        .modal-btn.cancel:active {
+            background: #6a3a3a;
+        }
+
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .number-btn {
+            background: #2a4a6a;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            padding: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
             text-align: center;
         }
 
-        .capacity {
-            font-size: 7px;
-            color: #ffaa00;
+        .number-btn:active {
+            background: #3a5f7a;
+        }
+
+        .build-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .build-modal-overlay.active {
+            display: flex;
+        }
+
+        .build-modal {
+            background: #132a40;
+            border-radius: 28px;
+            border: 2px solid #ffd700;
+            width: 92%;
+            max-width: 340px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .modal-header {
+            background: #1e3750;
+            padding: 14px 18px;
+            border-bottom: 2px solid #ffd700;
+            flex-shrink: 0;
+        }
+
+        .modal-header .modal-title {
+            color: #ffd700;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             text-align: center;
+            margin-bottom: 0;
+        }
+
+        .buildings-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: #ffd700 #2a4a6a;
+        }
+
+        .buildings-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .buildings-container::-webkit-scrollbar-track {
+            background: #2a4a6a;
+            border-radius: 10px;
+        }
+
+        .buildings-container::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+
+        .buildings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .buildings-category {
+            margin-bottom: 8px;
+        }
+
+        .buildings-category-title {
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ffd700;
+            padding-bottom: 4px;
+        }
+
+        .building-card {
+            background: #1a3349;
+            border: 2px solid #3a5f7a;
+            border-radius: 16px;
+            padding: 12px 10px;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.2s;
+            cursor: default;
+            position: relative;
+        }
+
+        .building-card:hover {
+            background: #1e3f5a;
+        }
+
+        .building-card.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .building-card .building-name {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            -webkit-line-clamp: 1;
+            max-height: none;
+            text-align: center;
+            width: 100%;
+        }
+
+        .stats-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .income-items {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #90EE90;
+        }
+
+        .expense-items {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: #ffb6b6;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .stat-icon {
+            font-size: 14px;
+        }
+
+        .building-desc {
+            color: #a0d0ff;
+            font-size: 13px;
+            margin-bottom: 10px;
+            font-style: italic;
+            text-align: center;
+            width: 100%;
+        }
+
+        .profit-warning {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .card-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            margin: 8px 0 10px 0;
+            width: 100%;
+        }
+
+        .action-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .resources-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+            width: 100%;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            color: #ffffff;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .resource-icon {
+            font-size: 14px;
+        }
+
+        .resource-icon.capital { color: #ffd700; }
+        .resource-icon.materials { color: #a0d0ff; }
+        .resource-icon.energy { color: #87cefa; }
+
+        .resource-value.insufficient {
+            color: #ff6b6b;
+        }
+
+        .build-btn {
+            background: #2d5f7a;
+            border: none;
+            border-radius: 16px;
+            padding: 6px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 2px 0 #1a3b4f;
+            min-width: 110px;
+            transition: opacity 0.2s;
+        }
+
+        .build-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #1a3b4f;
+        }
+
+        .build-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-time {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            color: #ffd700;
+            font-size: 12px;
+        }
+
+        .close-btn {
+            background: #4a2a2a;
+            border: none;
+            border-radius: 30px;
+            padding: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            width: calc(100% - 32px);
+            margin: 8px 16px 16px 16px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 0 #2a1a1a;
+        }
+
+        .close-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 1px 0 #2a1a1a;
+        }
+
+        .upgrade-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .upgrade-modal-overlay.active {
+            display: flex;
+        }
+
+        .upgrade-modal {
+            background: #1e3750;
+            border-radius: 24px;
+            border: 2px solid #ffd700;
+            width: 90%;
+            max-width: 300px;
+            padding: 14px;
+        }
+
+        .upgrade-modal-title {
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .upgrade-info-block {
+            background: #2a4a6a;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #5f9dc9;
+        }
+
+        .upgrade-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #3a5f7a;
+        }
+
+        .upgrade-header-icon {
+            font-size: 40px;
+            margin-bottom: 3px;
+        }
+
+        .upgrade-header-title {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: 800;
+            text-align: center;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .upgrade-header-desc {
+            color: #a0d0ff;
+            font-size: 13px;
+            text-align: center;
+            font-style: italic;
+            max-width: 95%;
+            line-height: 1.4;
+            padding: 0 2px;
+        }
+
+        .upgrade-levels-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .upgrade-level-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin: 2px 0;
+        }
+
+        .upgrade-level-badge {
+            background: #ffa500;
+            color: black;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 2px 10px;
+            border-radius: 14px;
+            display: inline-block;
+            margin-bottom: 6px;
+            text-align: center;
+            white-space: nowrap;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .upgrade-resources-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 8px 12px;
+            width: 100%;
+            padding: 4px 0;
+        }
+
+        .upgrade-resource-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .upgrade-resource-item.income {
+            color: #90EE90;
+        }
+
+        .upgrade-resource-item.expense {
+            color: #ffb6b6;
+        }
+
+        .upgrade-resource-item .icon {
+            font-size: 13px;
+        }
+
+        .upgrade-military-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #87cefa;
+        }
+
+        .upgrade-jobs-item {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #a0d0ff;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .upgrade-transition {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 8px 0;
+            color: #ffd700;
+            font-size: 16px;
+            gap: 12px;
+        }
+
+        .transition-line {
+            flex: 1;
+            max-width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffd700, #ffd700, #ffd700, transparent);
+            border-radius: 1px;
+        }
+
+        .transition-arrow {
+            font-size: 20px;
+            filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+        }
+
+        .upgrade-cost-section {
+            background: #1e3f5a;
+            border-radius: 8px;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .upgrade-cost-title {
+            color: #a0d0ff;
+            font-size: 10px;
+            margin-bottom: 5px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .upgrade-cost-items {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .cost-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            color: white;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .cost-item.insufficient {
+            color: #ff6b6b;
+        }
+
+        .upgrade-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .upgrade-btn {
+            flex: 1;
+            height: 42px;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 0 4px;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+
+        .upgrade-btn.confirm {
+            background: #5a4a2a;
+            color: white;
+        }
+
+        .upgrade-btn.confirm:active:not(:disabled) {
+            background: #7a6a3a;
+        }
+
+        .upgrade-btn.cancel {
+            background: #4a2a2a;
+            color: white;
+        }
+
+        .upgrade-btn.cancel:active {
+            background: #6a3a3a;
+        }
+
+        .upgrade-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-time-icon {
+            color: #ffd700;
+            font-size: 11px;
+        }
+
+        .btn-time-text {
+            color: #ffd700;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .notification-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-modal-overlay.active {
+            display: flex;
+        }
+
+        .notification-modal {
+            background: #1e3750;
+            border-radius: 24px;
+            border: 2px solid #ffd700;
+            width: 80%;
+            max-width: 280px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .notification-title {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .notification-message {
+            color: #a0d0ff;
+            font-size: 14px;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .notification-btn {
+            background: #5a4a2a;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            padding: 10px 20px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .notification-btn:active {
+            background: #7a6a3a;
         }
     </style>
 </head>
 <body>
 <div class="game-container">
-    <!-- Верхняя панель -->
-    <div class="header">
-        <div class="title">💰 КАПИТАЛ-СИТИ</div>
-        <div class="resources">
-            <span class="resource">💰5.8M</span>
-            <span class="resource">⛓️4.2k</span>
-            <span class="resource">⚡3.4k</span>
-        </div>
-    </div>
-
-    <!-- Финансы (маленькие цифры) -->
-    <div class="card">
-        <div class="card-title">💰 Финансы</div>
-        <div style="display: flex; justify-content: space-between;">
-            <div><span class="label">Доход:</span> <span class="income">312k</span></div>
-            <div><span class="label">Расход:</span> <span class="expense">98k</span></div>
-            <div><span class="label">Прибыль:</span> <span class="income">214k</span></div>
-        </div>
-    </div>
-
-    <!-- Город (ОЧЕНЬ МАЛЕНЬКИЙ) -->
-    <div class="card">
-        <div class="card-title">🏙️ Город</div>
-        <div class="city-grid" id="cityGrid"></div>
-    </div>
-
-    <!-- Активы и Ценности в одной строке -->
-    <div class="grid-2">
-        <div class="card">
-            <div class="card-title">💼 Активы</div>
-            <div class="asset-row"><span class="asset-name">Газпром</span><span class="asset-value">150</span></div>
-            <div class="asset-row"><span class="asset-name">Сбербанк</span><span class="asset-value">300</span></div>
-            <div class="asset-row"><span class="asset-name">Облигации</span><span class="asset-value">500k</span></div>
-        </div>
-        <div class="card">
-            <div class="card-title">👑 Ценности</div>
-            <div class="asset-row"><span class="asset-name">Золото</span><span class="asset-value">15кг</span></div>
-            <div class="asset-row"><span class="asset-name">Антиквариат</span><span class="asset-value">8</span></div>
-            <div class="asset-row"><span class="asset-name">Картины</span><span class="asset-value">2.5M</span></div>
-        </div>
-    </div>
-
-    <!-- Биржа и Счета -->
-    <div class="grid-2">
-        <div class="card">
-            <div class="card-title">📈 Биржа</div>
-            <div class="stock-row">
-                <span>Газпром</span><span>245</span>
-                <div class="stock-actions"><button class="stock-btn">К</button><button class="stock-btn">П</button></div>
-            </div>
-            <div class="stock-row">
-                <span>Норникель</span><span>3.4k</span>
-                <div class="stock-actions"><button class="stock-btn">К</button><button class="stock-btn">П</button></div>
-            </div>
-            <div class="stock-row">
-                <span>Сбербанк</span><span>183</span>
-                <div class="stock-actions"><button class="stock-btn">К</button><button class="stock-btn">П</button></div>
+    <div class="sticky-header">
+        <div class="header">
+            <div class="title">💰 ФИНАНС-СИТИ</div>
+            <div class="resources">
+                <div class="resource">
+                    <span class="resource-icon">💰</span>
+                    <span class="resource-value" id="capital">20,000</span>
+                    <span class="resource-limit" id="capitalLimit">/20K</span>
+                </div>
+                <div class="resource">
+                    <span class="resource-icon">⛓️</span>
+                    <span class="resource-value" id="materials">5,000</span>
+                    <span class="resource-limit" id="materialsLimit">/15K</span>
+                </div>
+                <div class="resource">
+                    <span class="resource-icon">⚡</span>
+                    <span class="resource-value" id="energy">3,000</span>
+                    <span class="resource-limit" id="energyLimit">/10K</span>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div class="content">
+        <div class="resources-card">
+            <div class="resources-title">📊 РЕСУРСЫ</div>
+            <div class="resources-table">
+                <div class="table-header">
+                    <span class="header-cell"></span>
+                    <span class="header-cell">Доход</span>
+                    <span class="header-cell">Расход</span>
+                    <span class="header-cell">Прибыль</span>
+                </div>
+                <div class="table-row">
+                    <span class="resource-name"><span class="icon">💰</span> Финансы</span>
+                    <span class="income-value" id="incomeCapital">0</span>
+                    <span class="expense-value" id="expenseCapital">0</span>
+                    <span class="profit-value" id="profitCapital">0</span>
+                </div>
+                <div class="table-row">
+                    <span class="resource-name"><span class="icon">⛓️</span> Материалы</span>
+                    <span class="income-value" id="incomeMaterials">0</span>
+                    <span class="expense-value" id="expenseMaterials">0</span>
+                    <span class="profit-value" id="profitMaterials">0</span>
+                </div>
+                <div class="table-row">
+                    <span class="resource-name"><span class="icon">⚡</span> Энергия</span>
+                    <span class="income-value" id="incomeEnergy">0</span>
+                    <span class="expense-value" id="expenseEnergy">0</span>
+                    <span class="profit-value" id="profitEnergy">0</span>
+                </div>
+            </div>
+        </div>
+
         <div class="card">
-            <div class="card-title">🏦 Счета</div>
-            <div class="asset-row"><span class="asset-name">Основной</span><span class="asset-value">1.25M</span></div>
-            <div class="asset-row"><span class="asset-name">Депозит</span><span class="asset-value">500k</span></div>
-            <div class="asset-row"><span class="asset-name">Кредит</span><span class="asset-value">до 2M</span></div>
+            <div class="card-title">📦 ХРАНИЛИЩЕ</div>
+            <div class="storage-grid">
+                <div class="storage-item">
+                    <span class="storage-icon">🏆</span>
+                    <span class="storage-name">ЗОЛОТО</span>
+                    <span class="storage-value" id="goldStorage">0 КГ</span>
+                </div>
+                <div class="storage-item">
+                    <span class="storage-icon">🏺</span>
+                    <span class="storage-name">МЕТАЛЛЫ</span> <!-- изменено -->
+                    <span class="storage-value">8 ЕД.</span>
+                </div>
+                <div class="storage-item">
+                    <span class="storage-icon">🎨</span>
+                    <span class="storage-name">ТОПЛИВО</span> <!-- изменено -->
+                    <span class="storage-value">2.5M</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">🏙️ ГОРОД</div>
+            <div class="city-grid" id="cityGrid"></div>
+        </div>
+
+        <div class="card">
+            <div class="army-header">
+                <div class="card-title">⚔️ АРМИЯ</div>
+                <div class="army-total" id="totalArmy">0 ЕД.</div>
+            </div>
+            <div class="army-grid" id="armyGrid"></div>
         </div>
     </div>
 
-    <!-- Армия (4 юнита в ряд) -->
-    <div class="card">
-        <div class="card-title">⚔️ Армия</div>
-        <div class="grid-4" id="armyGrid"></div>
+    <!-- УВЕЛИЧЕННОЕ НИЖНЕЕ МЕНЮ -->
+    <div class="bottom-menu">
+        <button class="menu-btn">
+            <span class="menu-icon">⚔️</span>
+            <span class="menu-text">Профиль</span>
+        </button>
+        <button class="menu-btn shop">
+            <span class="menu-icon">🛒</span>
+            <span class="menu-text">Магазин</span>
+        </button>
+        <button class="menu-btn">
+            <span class="menu-icon">🛡️</span>
+            <span class="menu-text">СВО</span>
+        </button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-title" id="modalTitle">ВВЕДИТЕ КОЛИЧЕСТВО</div>
+        
+        <div class="modal-resources-header">
+            <div class="modal-resource-item">
+                <span>💰</span>
+                <span id="modalCapital">20,000</span>
+            </div>
+            <div class="modal-resource-item">
+                <span>⛓️</span>
+                <span id="modalMaterials">5,000</span>
+            </div>
+            <div class="modal-resource-item">
+                <span>⚡</span>
+                <span id="modalEnergy">3,000</span>
+            </div>
+        </div>
+        
+        <input type="text" class="modal-input" id="modalInput" value="1" readonly>
+        
+        <div class="number-pad" id="numberPad"></div>
+        
+        <div class="modal-info" id="modalInfo"></div>
+        
+        <div class="modal-buttons">
+            <button class="modal-btn apply" id="modalApply">ПРИМЕНИТЬ</button>
+            <button class="modal-btn cancel" id="modalCancel">ОТМЕНА</button>
+        </div>
+    </div>
+</div>
+
+<div class="build-modal-overlay" id="buildModal">
+    <div class="build-modal">
+        <div class="modal-header">
+            <div class="modal-title">🏗️ ВЫБЕРИТЕ ЗДАНИЕ</div>
+        </div>
+
+        <div class="buildings-container">
+            <div class="buildings-list" id="buildingsList"></div>
+        </div>
+
+        <button class="close-btn" id="closeBuildModal">ЗАКРЫТЬ</button>
+    </div>
+</div>
+
+<div class="upgrade-modal-overlay" id="upgradeModal">
+    <div class="upgrade-modal">
+        <div class="upgrade-modal-title">⬆️ УЛУЧШЕНИЕ</div>
+        <div id="upgradeBuildingInfo"></div>
+        <div class="upgrade-buttons" id="upgradeButtons">
+            <button class="upgrade-btn cancel" id="cancelUpgrade">ОТМЕНА</button>
+            <button class="upgrade-btn confirm" id="confirmUpgrade">
+                УЛУЧШИТЬ
+                <span class="btn-time-icon">⏱️</span>
+                <span class="btn-time-text" id="upgradeTimeBtn">30с</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="notification-modal-overlay" id="notificationModal">
+    <div class="notification-modal">
+        <div class="notification-title">⚠️ ВНИМАНИЕ</div>
+        <div class="notification-message" id="notificationMessage"></div>
+        <button class="notification-btn" id="notificationCloseBtn">ОК</button>
     </div>
 </div>
 
 <script>
-    // Город (очень компактный)
-    const cityIcons = ['🏛️', '🏦', '🏪', '🏛️', '✈️', '🛩️'];
-    const cityGrid = document.getElementById('cityGrid');
-    
-    for (let i = 0; i < 25; i++) {
-        const cell = document.createElement('div');
-        cell.className = 'city-cell';
-        cell.textContent = i < cityIcons.length ? cityIcons[i] : '+';
-        cityGrid.appendChild(cell);
-    }
+    // ================ НОВАЯ СИСТЕМА ЗДАНИЙ ================
 
-    // Армия (4 юнита)
+    // Ресурсы игрока
+    let playerResources = {
+        capital: 20000,
+        materials: 5000,
+        energy: 3000
+    };
+
+    // Лимиты ресурсов
+    let resourceLimits = {
+        capital: 20000,
+        materials: 15000,
+        energy: 10000
+    };
+
+    // Рабочие и рабочие места
+    let workers = 40;
+    let totalJobs = 0;
+
+    // Золото для ломбарда
+    let gold = 0;
+
+    // Доходы/расходы (только от построенных зданий)
+    let resourceIncome = { capital: 0, materials: 0, energy: 0 };
+    let resourceExpense = { capital: 0, materials: 0, energy: 0 };
+
+    // Модификаторы юнитов от военных зданий
+    let unitMultipliers = {
+        attack: 1,
+        defense: 1,
+        health: 1,
+        createTime: 1,
+        maxInfantry: 0,
+        maxVehicle: 0,
+        maxAir: 0,
+        maxPvo: 0
+    };
+
+    // Данные юнитов (стоимость уменьшена в 5 раз)
     const units = [
-        { name: 'Пехота', icon: '🔫', count: 0, max: 100, attack: 45 },
-        { name: 'Техника', icon: '🚀', count: 0, max: 80, attack: 85 },
-        { name: 'Авиация', icon: '✈️', count: 0, max: 60, attack: 120 },
-        { name: 'ПВО', icon: '🎯', count: 0, max: 50, attack: 70 }
+        { id: 1, name: 'ПЕХОТА', icon: '🔫', count: 0, health: 100, attack: 45, defense: 30, createTime: 3,
+          resources: { capital: 1000, materials: 4, energy: 2 } },
+        { id: 2, name: 'ТЕХНИКА', icon: '🚀', count: 0, health: 200, attack: 85, defense: 70, createTime: 5,
+          resources: { capital: 3000, materials: 10, energy: 6 } },
+        { id: 3, name: 'АВИАЦИЯ', icon: '✈️', count: 0, health: 150, attack: 120, defense: 50, createTime: 8,
+          resources: { capital: 6000, materials: 20, energy: 16 } },
+        { id: 4, name: 'ПВО', icon: '🎯', count: 0, health: 180, attack: 70, defense: 90, createTime: 6,
+          resources: { capital: 4000, materials: 14, energy: 10 } }
     ];
 
-    const armyGrid = document.getElementById('armyGrid');
-    
-    units.forEach(unit => {
-        const card = document.createElement('div');
-        card.className = 'unit-card';
-        card.innerHTML = `
-            <div class="unit-name">${unit.icon} ${unit.name}</div>
-            <div class="unit-stats">⚔️${unit.attack}</div>
-            <div class="unit-count">${unit.count}</div>
-            <div class="capacity">${unit.count}/${unit.max}</div>
+    // Функция для получения дохода на уровне (линейный рост 5%)
+    function getIncomeForLevel(baseIncome, level) {
+        if (!baseIncome) return 0;
+        return Math.round(baseIncome * (1 + 0.05 * (level - 1)));
+    }
+
+    // Функция для получения расхода на уровне (линейный рост 5%)
+    function getExpenseForLevel(baseExpense, level) {
+        if (!baseExpense) return 0;
+        return Math.round(baseExpense * (1 + 0.05 * (level - 1)));
+    }
+
+    // Функция для получения значения на конкретном уровне при росте 50% от предыдущего
+    function getValueAtLevel(base, level) {
+        if (level === 0) return 0;
+        let value = base;
+        for (let i = 1; i < level; i++) {
+            value = Math.round(value * 1.5);
+        }
+        return value;
+    }
+
+    // Функция для получения суммарного значения за все уровни от 1 до level
+    function getCumulativeValue(base, level) {
+        if (level === 0) return 0;
+        let total = 0;
+        let current = base;
+        for (let i = 1; i <= level; i++) {
+            total += current;
+            if (i < level) {
+                current = Math.round(current * 1.5);
+            }
+        }
+        return total;
+    }
+
+    // Функции для военных эффектов
+    function getUnitCapacity(base, level) {
+        return Math.floor(base * Math.pow(level, 1.5));
+    }
+
+    function getAttackDefenseMultiplier(level) {
+        if (level <= 1) return 1;
+        return 1 + (level - 1) / (level + 8);
+    }
+
+    function getHealthMultiplier(level) {
+        if (level <= 1) return 1;
+        return 1 + (level - 1) / (level + 8);
+    }
+
+    function getCreateTimeMultiplier(level) {
+        if (level <= 1) return 1;
+        return 1 - ((level - 1) / (level + 8)) * 0.9;
+    }
+
+    // Функция для вычисления лимита ресурса для хранилища на заданном уровне
+    function getResourceLimitForLevel(building, level) {
+        if (!building.specialEffect || building.specialEffect.type !== 'limit') return null;
+        let base = building.specialEffect.base;
+        let percent = building.specialEffect.percent;
+        let limit = base;
+        for (let lv = 1; lv <= level; lv++) {
+            limit = Math.round(limit * (1 + percent));
+        }
+        limit = Math.round(limit / 1000) * 1000;
+        return limit;
+    }
+
+    // Список всех зданий (с изменёнными параметрами согласно заданию)
+    const availableBuildings = [
+        { id: 'residential', name: 'Жилой комплекс', icon: '🏘️', category: 'housing',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 1000, materials: 50, energy: 20 }, buildTime: 20,
+          jobsPerLevel: 0,
+          specialEffect: { type: 'workers', value: 40 },
+          description: 'Обеспечивает город рабочей силой. Каждый уровень увеличивает рабочих на 50%.' },
+        { id: 'mall', name: 'Торговый центр', icon: '🏬', category: 'production',
+          baseIncome: { capital: 120 }, baseExpense: { energy: 10 },
+          cost: { capital: 2000, materials: 100, energy: 50 }, buildTime: 30,
+          jobsPerLevel: 2,
+          description: 'Приносит финансы, тратит энергию.' },
+        { id: 'business', name: 'Бизнес-центр', icon: '🏢', category: 'production',
+          baseIncome: { capital: 140 }, baseExpense: { energy: 12 },
+          cost: { capital: 4000, materials: 200, energy: 100 }, buildTime: 40,
+          jobsPerLevel: 2,
+          description: 'Приносит финансы, тратит энергию.' },
+        { id: 'factory', name: 'Завод', icon: '🏭', category: 'production',
+          baseIncome: { capital: 160 }, baseExpense: { materials: 20 },
+          cost: { capital: 7000, materials: 350, energy: 200 }, buildTime: 50,
+          jobsPerLevel: 3,
+          description: 'Приносит финансы, тратит материалы.' },
+        { id: 'financial', name: 'Финансовый квартал', icon: '💹', category: 'production',
+          baseIncome: { capital: 180 }, baseExpense: { energy: 25 }, // изменено с 200
+          cost: { capital: 12000, materials: 600, energy: 350 }, buildTime: 70,
+          jobsPerLevel: 3,
+          description: 'Приносит финансы, тратит энергию.' },
+        { id: 'mine', name: 'Шахта', icon: '⛏️', category: 'materials',
+          baseIncome: { materials: 80 }, baseExpense: { capital: 70 }, // изменено с 90 и 90
+          cost: { capital: 1500, materials: 80, energy: 30 }, buildTime: 30,
+          jobsPerLevel: 2,
+          description: 'Добывает материалы, тратит финансы.' },
+        { id: 'sawmill', name: 'Лесопилка', icon: '🌲', category: 'materials',
+          baseIncome: { materials: 110 }, baseExpense: { energy: 20 },
+          cost: { capital: 1200, materials: 60, energy: 20 }, buildTime: 25,
+          jobsPerLevel: 2,
+          description: 'Производит материалы, тратит энергию.' },
+        { id: 'recycling', name: 'Переработка', icon: '♻️', category: 'materials', // теперь перед oilrig
+          baseIncome: { materials: 130 }, baseExpense: { capital: 120 },
+          cost: { capital: 2200, materials: 110, energy: 55 }, buildTime: 32,
+          jobsPerLevel: 2,
+          description: 'Производит материалы, тратит финансы.' },
+        { id: 'oilrig', name: 'Нефтяная вышка', icon: '🛢️', category: 'materials', // после recycling
+          baseIncome: { materials: 150 }, baseExpense: { capital: 250 }, // изменено с 200
+          cost: { capital: 3000, materials: 150, energy: 60 }, buildTime: 45,
+          jobsPerLevel: 3,
+          description: 'Максимальная добыча материалов, тратит финансы.' },
+        { id: 'powerplant', name: 'Электростанция', icon: '⚡', category: 'energy',
+          baseIncome: { energy: 100 }, baseExpense: { materials: 25 }, // изменено с 70
+          cost: { capital: 2000, materials: 100, energy: 50 }, buildTime: 35,
+          jobsPerLevel: 2,
+          description: 'Вырабатывает энергию, тратит материалы.' },
+        { id: 'solar', name: 'Солнечная ферма', icon: '☀️', category: 'energy',
+          baseIncome: { energy: 130 }, baseExpense: { capital: 450 },
+          cost: { capital: 1500, materials: 70, energy: 30 }, buildTime: 30,
+          jobsPerLevel: 1,
+          description: 'Вырабатывает энергию, тратит финансы.' },
+        { id: 'bank', name: 'Банк', icon: '🏦', category: 'storage',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 3000, materials: 150, energy: 80 }, buildTime: 40,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'limit', resource: 'capital', base: 20000, percent: 0.1 },
+          description: 'Увеличивает лимит финансов.' },
+        { id: 'warehouse', name: 'Склад', icon: '📦', category: 'storage',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 2500, materials: 120, energy: 60 }, buildTime: 35,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'limit', resource: 'materials', base: 15000, percent: 0.1 },
+          description: 'Увеличивает лимит материалов.' },
+        { id: 'energystorage', name: 'Энергохранилище', icon: '🔋', category: 'storage',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 2800, materials: 140, energy: 70 }, buildTime: 38,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'limit', resource: 'energy', base: 10000, percent: 0.1 },
+          description: 'Увеличивает лимит энергии.' },
+        { id: 'cityhall', name: 'Мэрия', icon: '🏛️', category: 'special',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 5000, materials: 250, energy: 150 }, buildTime: 60,
+          jobsPerLevel: 2,
+          specialEffect: { type: 'limit_cap' },
+          description: 'Административный центр. Все здания не могут быть выше уровня Мэрии.' },
+        { id: 'market', name: 'Рынок', icon: '🏪', category: 'special',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 2000, materials: 100, energy: 50 }, buildTime: 30,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'market' },
+          description: 'Позволяет обменивать ресурсы.' },
+        { id: 'pawnshop', name: 'Ломбард', icon: '💎', category: 'special',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 5000, materials: 250, energy: 150 }, buildTime: 60,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'pawnshop' },
+          description: 'Позволяет покупать и продавать золото.' },
+        // Военные здания
+        { id: 'barracks', name: 'Казарма', icon: '🏛️', category: 'military',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 2000, materials: 100, energy: 50 }, buildTime: 30,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'unitCapacity', unit: 'infantry', base: 10, power: 1.5 },
+          description: 'Увеличивает макс. количество пехоты.' },
+        { id: 'hangar', name: 'Ангар', icon: '🚜', category: 'military',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 2500, materials: 120, energy: 60 }, buildTime: 35,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'unitCapacity', unit: 'vehicle', base: 10, power: 1.5 },
+          description: 'Увеличивает макс. количество техники.' },
+        { id: 'airbase', name: 'Авиабаза', icon: '✈️', category: 'military',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 3000, materials: 150, energy: 80 }, buildTime: 40,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'unitCapacity', unit: 'air', base: 10, power: 1.5 },
+          description: 'Увеличивает макс. количество авиации.' },
+        { id: 'defense', name: 'Укрепление', icon: '🛡️', category: 'military',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 2800, materials: 140, energy: 70 }, buildTime: 38,
+          jobsPerLevel: 1,
+          specialEffect: { type: 'unitCapacity', unit: 'pvo', base: 10, power: 1.5 },
+          description: 'Увеличивает макс. количество ПВО.' },
+        { id: 'range', name: 'Полигон', icon: '🎯', category: 'military',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 4000, materials: 200, energy: 100 }, buildTime: 50,
+          jobsPerLevel: 2,
+          specialEffect: { type: 'unitCreateTime', formula: '0.1 + 7.2/(level+8)' },
+          description: 'Ускоряет создание юнитов.' },
+        { id: 'militaryHQ', name: 'Военная часть', icon: '🏛️', category: 'military',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 4500, materials: 220, energy: 120 }, buildTime: 55,
+          jobsPerLevel: 2,
+          specialEffect: { type: 'unitAttackDefense', formula: '1 + level/(level+9)' },
+          description: 'Увеличивает атаку и защиту всех юнитов.' },
+        { id: 'hospital', name: 'Госпиталь', icon: '🏥', category: 'military',
+          baseIncome: {}, baseExpense: {},
+          cost: { capital: 3500, materials: 180, energy: 100 }, buildTime: 45,
+          jobsPerLevel: 2,
+          specialEffect: { type: 'unitHealth', formula: '1 + level/(level+9)' },
+          description: 'Увеличивает здоровье всех юнитов.' }
+    ];
+
+    // Состояние города
+    let cityCells = new Array(25).fill(null);
+    cityCells[0] = { id: 'cityhall', level: 1 };
+    cityCells[1] = { id: 'residential', level: 1 };
+    cityCells[2] = { id: 'mall', level: 1 };
+    cityCells[3] = { id: 'mine', level: 1 };
+    cityCells[4] = { id: 'powerplant', level: 1 };
+
+    // Активные стройки
+    let activeConstructions = [];
+    let selectedCellIndex = null;
+    let isUpdating = false;
+    let updateInterval = null;
+
+    // Переменные армии
+    const defaultCounterValues = { 1: 1, 2: 1, 3: 1, 4: 1 };
+    let counterValues = { ...defaultCounterValues };
+    let timers = { 1: null, 2: null, 3: null, 4: null };
+    let pressIntervals = {};
+    let pressTimeouts = {};
+    let currentModalUnitId = null;
+    let tempInputValue = "";
+
+    // Множество используемых id зданий
+    let usedBuildingIds = new Set();
+
+    // Функция для показа уведомлений
+    function showNotification(message) {
+        document.getElementById('notificationMessage').textContent = message;
+        document.getElementById('notificationModal').classList.add('active');
+    }
+
+    document.getElementById('notificationCloseBtn').onclick = function() {
+        document.getElementById('notificationModal').classList.remove('active');
+    };
+
+    document.getElementById('notificationModal').onclick = function(e) {
+        if (e.target === document.getElementById('notificationModal')) {
+            document.getElementById('notificationModal').classList.remove('active');
+        }
+    };
+
+    // Вспомогательные функции
+    function formatNumber(num) {
+        if (num < 10000) return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        if (num >= 1e9) return (num/1e9).toFixed(2) + 'B';
+        if (num >= 1e6) return (num/1e6).toFixed(2) + 'M';
+        if (num >= 1e3) return (num/1e3).toFixed(2) + 'K';
+        return num.toString();
+    }
+
+    function formatLimit(num) {
+        if (num >= 1e6) return (num/1e6).toFixed(1) + 'M';
+        if (num >= 1e3) return Math.round(num/1e3) + 'K';
+        return num.toString();
+    }
+
+    function formatPerSecond(value, type) {
+        if (type === 'capital') {
+            if (value >= 1e9) return (value/1e9).toFixed(2) + 'B/c';
+            if (value >= 1e6) return (value/1e6).toFixed(2) + 'M/c';
+            if (value >= 1e3) return (value/1e3).toFixed(2) + 'K/c';
+            return value + '/c';
+        }
+        return value + '/c';
+    }
+
+    function formatTime(seconds) {
+        if (seconds < 60) return `${seconds}с`;
+        else if (seconds < 3600) {
+            const m = Math.floor(seconds / 60);
+            const s = seconds % 60;
+            return `${m}м ${s}с`;
+        } else {
+            const h = Math.floor(seconds / 3600);
+            const m = Math.floor((seconds % 3600) / 60);
+            return `${h}ч ${m}м`;
+        }
+    }
+
+    function getBuildingById(id) {
+        return availableBuildings.find(b => b.id === id);
+    }
+
+    function checkResourcesAvailable(cost) {
+        return {
+            capital: playerResources.capital >= cost.capital,
+            materials: playerResources.materials >= cost.materials,
+            energy: playerResources.energy >= cost.energy,
+            all: playerResources.capital >= cost.capital &&
+                 playerResources.materials >= cost.materials &&
+                 playerResources.energy >= cost.energy
+        };
+    }
+
+    function deductResources(cost) {
+        playerResources.capital -= cost.capital;
+        playerResources.materials -= cost.materials;
+        playerResources.energy -= cost.energy;
+        clampResources();
+        updateResourcesDisplay();
+    }
+
+    function clampResources() {
+        playerResources.capital = Math.min(playerResources.capital, resourceLimits.capital);
+        playerResources.materials = Math.min(playerResources.materials, resourceLimits.materials);
+        playerResources.energy = Math.min(playerResources.energy, resourceLimits.energy);
+    }
+
+    // Получить вклад здания в доходы/расходы при заданном уровне
+    function getBuildingContribution(building, level) {
+        let income = { capital: 0, materials: 0, energy: 0 };
+        let expense = { capital: 0, materials: 0, energy: 0 };
+        if (building.baseIncome.capital) income.capital = getIncomeForLevel(building.baseIncome.capital, level);
+        if (building.baseIncome.materials) income.materials = getIncomeForLevel(building.baseIncome.materials, level);
+        if (building.baseIncome.energy) income.energy = getIncomeForLevel(building.baseIncome.energy, level);
+        if (building.baseExpense.capital) expense.capital = getExpenseForLevel(building.baseExpense.capital, level);
+        if (building.baseExpense.materials) expense.materials = getExpenseForLevel(building.baseExpense.materials, level);
+        if (building.baseExpense.energy) expense.energy = getExpenseForLevel(building.baseExpense.energy, level);
+        return { income, expense };
+    }
+
+    // Проверка, не станет ли чистая прибыль отрицательной после строительства/улучшения с учётом строящихся зданий
+    function wouldProfitGoNegativeWithConstructions(building, currentLevel, targetLevel, cellIndex) {
+        // Если здание не имеет доходов и расходов, оно не влияет на прибыль
+        const hasIncome = building.baseIncome.capital || building.baseIncome.materials || building.baseIncome.energy;
+        const hasExpense = building.baseExpense.capital || building.baseExpense.materials || building.baseExpense.energy;
+        if (!hasIncome && !hasExpense) {
+            return { ok: true };
+        }
+
+        // Начинаем с текущих доходов/расходов
+        let futureIncome = { capital: resourceIncome.capital, materials: resourceIncome.materials, energy: resourceIncome.energy };
+        let futureExpense = { capital: resourceExpense.capital, materials: resourceExpense.materials, energy: resourceExpense.energy };
+
+        // Добавляем вклад всех строящихся зданий (кроме того, что на cellIndex, если оно там есть)
+        activeConstructions.forEach(c => {
+            if (c.cellIndex === cellIndex) return;
+            let b = getBuildingById(c.buildingId);
+            if (!b) return;
+            let contrib = getBuildingContribution(b, c.targetLevel);
+            futureIncome.capital += contrib.income.capital;
+            futureIncome.materials += contrib.income.materials;
+            futureIncome.energy += contrib.income.energy;
+            futureExpense.capital += contrib.expense.capital;
+            futureExpense.materials += contrib.expense.materials;
+            futureExpense.energy += contrib.expense.energy;
+        });
+
+        // Если это улучшение (currentLevel > 0), убираем вклад текущего уровня и добавляем целевого
+        if (currentLevel > 0) {
+            let currentContrib = getBuildingContribution(building, currentLevel);
+            futureIncome.capital -= currentContrib.income.capital;
+            futureIncome.materials -= currentContrib.income.materials;
+            futureIncome.energy -= currentContrib.income.energy;
+            futureExpense.capital -= currentContrib.expense.capital;
+            futureExpense.materials -= currentContrib.expense.materials;
+            futureExpense.energy -= currentContrib.expense.energy;
+        }
+
+        // Добавляем вклад целевого уровня
+        let targetContrib = getBuildingContribution(building, targetLevel);
+        futureIncome.capital += targetContrib.income.capital;
+        futureIncome.materials += targetContrib.income.materials;
+        futureIncome.energy += targetContrib.income.energy;
+        futureExpense.capital += targetContrib.expense.capital;
+        futureExpense.materials += targetContrib.expense.materials;
+        futureExpense.energy += targetContrib.expense.energy;
+
+        // Проверяем чистую прибыль
+        let profitCapital = futureIncome.capital - futureExpense.capital;
+        let profitMaterials = futureIncome.materials - futureExpense.materials;
+        let profitEnergy = futureIncome.energy - futureExpense.energy;
+
+        if (profitCapital <= 0) return { ok: false, resource: 'финансов' };
+        if (profitMaterials <= 0) return { ok: false, resource: 'материалов' };
+        if (profitEnergy <= 0) return { ok: false, resource: 'энергии' };
+        return { ok: true };
+    }
+
+    function recalcCityStats() {
+        try {
+            totalJobs = 0;
+            let workersFromRes = 0;
+            resourceIncome = { capital: 0, materials: 0, energy: 0 };
+            resourceExpense = { capital: 0, materials: 0, energy: 0 };
+
+            resourceLimits = {
+                capital: 20000,
+                materials: 15000,
+                energy: 10000
+            };
+
+            unitMultipliers = {
+                attack: 1,
+                defense: 1,
+                health: 1,
+                createTime: 1,
+                maxInfantry: 0,
+                maxVehicle: 0,
+                maxAir: 0,
+                maxPvo: 0
+            };
+
+            for (let cell of cityCells) {
+                if (!cell) continue;
+                let b = getBuildingById(cell.id);
+                if (!b) continue;
+
+                if (b.jobsPerLevel > 0) {
+                    totalJobs += getCumulativeValue(b.jobsPerLevel, cell.level);
+                }
+
+                if (b.baseIncome.capital) resourceIncome.capital += getIncomeForLevel(b.baseIncome.capital, cell.level);
+                if (b.baseIncome.materials) resourceIncome.materials += getIncomeForLevel(b.baseIncome.materials, cell.level);
+                if (b.baseIncome.energy) resourceIncome.energy += getIncomeForLevel(b.baseIncome.energy, cell.level);
+                if (b.baseExpense.capital) resourceExpense.capital += getExpenseForLevel(b.baseExpense.capital, cell.level);
+                if (b.baseExpense.materials) resourceExpense.materials += getExpenseForLevel(b.baseExpense.materials, cell.level);
+                if (b.baseExpense.energy) resourceExpense.energy += getExpenseForLevel(b.baseExpense.energy, cell.level);
+
+                if (b.specialEffect) {
+                    if (b.specialEffect.type === 'workers') {
+                        workersFromRes += getCumulativeValue(b.specialEffect.value, cell.level);
+                    } else if (b.specialEffect.type === 'limit') {
+                        let limit = b.specialEffect.base;
+                        for (let lv = 1; lv <= cell.level; lv++) {
+                            limit = Math.round(limit * (1 + b.specialEffect.percent));
+                        }
+                        limit = Math.round(limit / 1000) * 1000;
+                        resourceLimits[b.specialEffect.resource] += limit - b.specialEffect.base;
+                    } else if (b.specialEffect.type === 'unitCapacity') {
+                        let value = getUnitCapacity(b.specialEffect.base, cell.level);
+                        if (b.specialEffect.unit === 'infantry') unitMultipliers.maxInfantry += value;
+                        else if (b.specialEffect.unit === 'vehicle') unitMultipliers.maxVehicle += value;
+                        else if (b.specialEffect.unit === 'air') unitMultipliers.maxAir += value;
+                        else if (b.specialEffect.unit === 'pvo') unitMultipliers.maxPvo += value;
+                    } else if (b.specialEffect.type === 'unitAttackDefense') {
+                        let mult = getAttackDefenseMultiplier(cell.level);
+                        unitMultipliers.attack *= mult;
+                        unitMultipliers.defense *= mult;
+                    } else if (b.specialEffect.type === 'unitHealth') {
+                        let mult = getHealthMultiplier(cell.level);
+                        unitMultipliers.health *= mult;
+                    } else if (b.specialEffect.type === 'unitCreateTime') {
+                        let mult = getCreateTimeMultiplier(cell.level);
+                        unitMultipliers.createTime *= mult;
+                    }
+                }
+            }
+
+            workers = workersFromRes;
+            updateResourcesTable();
+            updateResourcesDisplay();
+        } catch (e) {
+            console.error('Ошибка при пересчёте статистики города:', e);
+        }
+    }
+
+    function updateResourcesDisplay() {
+        document.getElementById('capital').textContent = formatNumber(playerResources.capital);
+        document.getElementById('materials').textContent = formatNumber(playerResources.materials);
+        document.getElementById('energy').textContent = formatNumber(playerResources.energy);
+        document.getElementById('capitalLimit').textContent = '/' + formatLimit(resourceLimits.capital);
+        document.getElementById('materialsLimit').textContent = '/' + formatLimit(resourceLimits.materials);
+        document.getElementById('energyLimit').textContent = '/' + formatLimit(resourceLimits.energy);
+        if (currentModalUnitId) {
+            document.getElementById('modalCapital').textContent = formatNumber(playerResources.capital);
+            document.getElementById('modalMaterials').textContent = formatNumber(playerResources.materials);
+            document.getElementById('modalEnergy').textContent = formatNumber(playerResources.energy);
+        }
+        adjustAllCounters();
+    }
+
+    function updateResourcesTable() {
+        document.getElementById('incomeCapital').textContent = resourceIncome.capital;
+        document.getElementById('expenseCapital').textContent = resourceExpense.capital;
+        document.getElementById('profitCapital').textContent = resourceIncome.capital - resourceExpense.capital;
+        document.getElementById('incomeMaterials').textContent = resourceIncome.materials;
+        document.getElementById('expenseMaterials').textContent = resourceExpense.materials;
+        document.getElementById('profitMaterials').textContent = resourceIncome.materials - resourceExpense.materials;
+        document.getElementById('incomeEnergy').textContent = resourceIncome.energy;
+        document.getElementById('expenseEnergy').textContent = resourceExpense.energy;
+        document.getElementById('profitEnergy').textContent = resourceIncome.energy - resourceExpense.energy;
+    }
+
+    function canUpgradeJobs(cellIndex, targetLevel) {
+        let cell = cityCells[cellIndex];
+        if (!cell) return { ok: false, reason: 'Нет здания' };
+        let building = getBuildingById(cell.id);
+        if (!building) return { ok: false, reason: 'Неизвестное здание' };
+        if (building.jobsPerLevel > 0) {
+            let addedJobs = getValueAtLevel(building.jobsPerLevel, targetLevel);
+            let newTotalJobs = totalJobs + addedJobs;
+            if (newTotalJobs > workers) {
+                return { ok: false, reason: 'Недостаточно рабочих' };
+            }
+        }
+        return { ok: true };
+    }
+
+    function getUpgradeCost(building, currentLevel) {
+        let multiplier = currentLevel + 1;
+        return {
+            capital: Math.floor(building.cost.capital * multiplier * 0.7),
+            materials: Math.floor(building.cost.materials * multiplier * 0.7),
+            energy: Math.floor(building.cost.energy * multiplier * 0.7)
+        };
+    }
+
+    function getUpgradeTime(building, currentLevel) {
+        return Math.floor(building.buildTime * (currentLevel + 1) * 0.5);
+    }
+
+    function isCellUnderConstruction(cellIndex) {
+        return activeConstructions.some(c => c.cellIndex === cellIndex);
+    }
+
+    function updateUsedBuildingsSet() {
+        usedBuildingIds.clear();
+        cityCells.forEach(cell => {
+            if (cell) usedBuildingIds.add(cell.id);
+        });
+        activeConstructions.forEach(c => usedBuildingIds.add(c.buildingId));
+    }
+
+    function startConstruction(cellIndex, buildingId, targetLevel, cost, totalTime) {
+        if (targetLevel === 1) {
+            if (cityCells[cellIndex] !== null) {
+                alert('Эта клетка уже занята!');
+                return false;
+            }
+        } else {
+            if (cityCells[cellIndex] === null) {
+                alert('Ошибка: нельзя улучшить пустую клетку');
+                return false;
+            }
+        }
+
+        let building = getBuildingById(buildingId);
+        if (!building) {
+            alert('Ошибка: здание не найдено');
+            return false;
+        }
+
+        if (targetLevel === 1) {
+            let addedJobs = getValueAtLevel(building.jobsPerLevel, 1);
+            if (totalJobs + addedJobs > workers) {
+                alert('Недостаточно рабочих');
+                return false;
+            }
+        } else {
+            let checkJobs = canUpgradeJobs(cellIndex, targetLevel);
+            if (!checkJobs.ok) {
+                alert(checkJobs.reason);
+                return false;
+            }
+        }
+
+        if (!checkResourcesAvailable(cost).all) {
+            alert('Недостаточно ресурсов!');
+            return false;
+        }
+
+        let currentLevel = targetLevel === 1 ? 0 : cityCells[cellIndex].level;
+        let profitCheck = wouldProfitGoNegativeWithConstructions(building, currentLevel, targetLevel, cellIndex);
+        if (!profitCheck.ok) {
+            showNotification(`Невозможно: чистая прибыль по ресурсу "${profitCheck.resource}" станет отрицательной. Постройте больше производящих зданий.`);
+            return false;
+        }
+
+        let cityHallLevel = 0;
+        let cityHallCell = cityCells.find(c => c && c.id === 'cityhall');
+        if (cityHallCell) cityHallLevel = cityHallCell.level;
+        if (buildingId !== 'cityhall' && targetLevel > cityHallLevel) {
+            showNotification(`Чтобы улучшить здание ${building.name}, получите разрешение в здании Мэрия, повысив его уровень.`);
+            return false;
+        }
+
+        deductResources(cost);
+        const now = Date.now();
+        activeConstructions.push({
+            cellIndex, buildingId, targetLevel,
+            startTime: now,
+            endTime: now + totalTime * 1000,
+            totalTime
+        });
+        updateUsedBuildingsSet();
+        updateSingleCell(cellIndex);
+        closeAllModals();
+        return true;
+    }
+
+    function completeConstruction(construction) {
+        try {
+            const { cellIndex, buildingId, targetLevel } = construction;
+            cityCells[cellIndex] = { id: buildingId, level: targetLevel };
+            activeConstructions = activeConstructions.filter(c => c.cellIndex !== cellIndex);
+            updateUsedBuildingsSet();
+            updateSingleCell(cellIndex);
+            recalcCityStats();
+        } catch (e) {
+            console.error('Ошибка при завершении строительства:', e);
+        }
+    }
+
+    function updateSingleCell(cellIndex) {
+        const cell = document.querySelector(`.city-cell[data-index="${cellIndex}"]`);
+        if (!cell) return;
+        const buildingData = cityCells[cellIndex];
+        const underConstruction = isCellUnderConstruction(cellIndex);
+        cell.classList.remove('empty', 'in-construction');
+        if (!buildingData) cell.classList.add('empty');
+        if (underConstruction) cell.classList.add('in-construction');
+
+        if (buildingData) {
+            const building = getBuildingById(buildingData.id);
+            if (building) {
+                let html = '';
+                const levelClass = buildingData.level >= 100 ? 'three-digit' : '';
+                html += `<div class="building-level-corner ${levelClass}">${buildingData.level}</div>`;
+                html += `<div class="building-icon">${building.icon}</div>
+                         <div class="building-name">${building.name}</div>`;
+                if (underConstruction) {
+                    const construction = activeConstructions.find(c => c.cellIndex === cellIndex);
+                    if (construction) {
+                        const now = Date.now();
+                        const remaining = Math.max(0, Math.ceil((construction.endTime - now) / 1000));
+                        const formattedTime = formatTime(remaining);
+                        html += `<div class="construction-time" id="time_${cellIndex}">${formattedTime}</div>
+                                 <div class="construction-progress" id="progress_${cellIndex}" style="width:0%"></div>`;
+                    }
+                }
+                cell.innerHTML = html;
+                cell.onclick = underConstruction ? null : () => openUpgradeModal(cellIndex);
+            }
+        } else {
+            cell.innerHTML = '<div class="empty-cell">➕</div>';
+            if (underConstruction) {
+                const construction = activeConstructions.find(c => c.cellIndex === cellIndex);
+                if (construction) {
+                    const building = getBuildingById(construction.buildingId);
+                    if (building) {
+                        cell.innerHTML = `<div class="building-icon">${building.icon}</div>
+                                          <div class="building-name">${building.name}</div>`;
+                        const now = Date.now();
+                        const remaining = Math.max(0, Math.ceil((construction.endTime - now) / 1000));
+                        const formattedTime = formatTime(remaining);
+                        cell.innerHTML += `<div class="construction-time" id="time_${cellIndex}">${formattedTime}</div>
+                                            <div class="construction-progress" id="progress_${cellIndex}" style="width:0%"></div>`;
+                    }
+                }
+            }
+            cell.onclick = underConstruction ? null : () => openBuildModal(cellIndex);
+        }
+    }
+
+    function processTimeTick() {
+        if (isUpdating) return;
+        isUpdating = true;
+        const now = Date.now();
+        const completed = activeConstructions.filter(c => now >= c.endTime);
+        if (completed.length > 0) {
+            completed.forEach(c => completeConstruction(c));
+        } else {
+            updateConstructionProgressBars();
+        }
+        isUpdating = false;
+    }
+
+    function updateConstructionProgressBars() {
+        const now = Date.now();
+        activeConstructions.forEach(construction => {
+            const progressBar = document.getElementById(`progress_${construction.cellIndex}`);
+            const timeLabel = document.getElementById(`time_${construction.cellIndex}`);
+            if (progressBar && timeLabel) {
+                const total = construction.endTime - construction.startTime;
+                const elapsed = now - construction.startTime;
+                const progress = (elapsed / total) * 100;
+                const remaining = Math.max(0, Math.ceil((construction.endTime - now) / 1000));
+                const formattedTime = formatTime(remaining);
+                progressBar.style.width = `${Math.min(100, progress)}%`;
+                timeLabel.textContent = formattedTime;
+            }
+        });
+    }
+
+    function renderCity() {
+        updateUsedBuildingsSet();
+        const grid = document.getElementById('cityGrid');
+        grid.innerHTML = '';
+        for (let i = 0; i < 25; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'city-cell';
+            cell.setAttribute('data-index', i);
+            const underConstruction = isCellUnderConstruction(i);
+            if (cityCells[i]) {
+                const buildingData = cityCells[i];
+                const building = getBuildingById(buildingData.id);
+                if (building) {
+                    let html = '';
+                    const levelClass = buildingData.level >= 100 ? 'three-digit' : '';
+                    html += `<div class="building-level-corner ${levelClass}">${buildingData.level}</div>`;
+                    html += `<div class="building-icon">${building.icon}</div>
+                             <div class="building-name">${building.name}</div>`;
+                    if (underConstruction) {
+                        cell.classList.add('in-construction');
+                        const construction = activeConstructions.find(c => c.cellIndex === i);
+                        if (construction) {
+                            const now = Date.now();
+                            const remaining = Math.max(0, Math.ceil((construction.endTime - now) / 1000));
+                            const formattedTime = formatTime(remaining);
+                            html += `<div class="construction-time" id="time_${i}">${formattedTime}</div>
+                                     <div class="construction-progress" id="progress_${i}" style="width:0%"></div>`;
+                        }
+                    }
+                    cell.innerHTML = html;
+                    cell.onclick = underConstruction ? null : () => openUpgradeModal(i);
+                }
+            } else {
+                cell.classList.add('empty');
+                if (underConstruction) {
+                    cell.classList.add('in-construction');
+                    const construction = activeConstructions.find(c => c.cellIndex === i);
+                    if (construction) {
+                        const building = getBuildingById(construction.buildingId);
+                        if (building) {
+                            cell.innerHTML = `<div class="building-icon">${building.icon}</div>
+                                              <div class="building-name">${building.name}</div>`;
+                            const now = Date.now();
+                            const remaining = Math.max(0, Math.ceil((construction.endTime - now) / 1000));
+                            const formattedTime = formatTime(remaining);
+                            cell.innerHTML += `<div class="construction-time" id="time_${i}">${formattedTime}</div>
+                                               <div class="construction-progress" id="progress_${i}" style="width:0%"></div>`;
+                        }
+                    }
+                    cell.onclick = null;
+                } else {
+                    cell.innerHTML = '<div class="empty-cell">➕</div>';
+                    cell.onclick = () => openBuildModal(i);
+                }
+            }
+            grid.appendChild(cell);
+        }
+    }
+
+    function openBuildModal(cellIndex) {
+        if (isCellUnderConstruction(cellIndex)) {
+            alert('Эта клетка уже строится!');
+            return;
+        }
+        if (cityCells[cellIndex] !== null) {
+            alert('Эта клетка уже занята!');
+            return;
+        }
+        selectedCellIndex = cellIndex;
+        const buildingsList = document.getElementById('buildingsList');
+        buildingsList.innerHTML = '';
+
+        const availableToBuild = availableBuildings.filter(b => 
+            !usedBuildingIds.has(b.id) && 
+            b.id !== 'residential' && 
+            b.id !== 'cityhall'
+        );
+
+        if (availableToBuild.length === 0) {
+            const emptyMessage = document.createElement('div');
+            emptyMessage.style.color = '#a0d0ff';
+            emptyMessage.style.textAlign = 'center';
+            emptyMessage.style.padding = '20px';
+            emptyMessage.style.fontStyle = 'italic';
+            emptyMessage.textContent = 'Все доступные здания уже построены';
+            buildingsList.appendChild(emptyMessage);
+        } else {
+            const categories = [
+                { title: '💰 ФИНАНСЫ', ids: ['mall','business','factory','financial'] },
+                { title: '⛏️ МАТЕРИАЛЫ', ids: ['mine','sawmill','recycling','oilrig'] }, // порядок изменён: recycling перед oilrig
+                { title: '⚡ ЭНЕРГИЯ', ids: ['powerplant','solar'] },
+                { title: '🏦 ХРАНИЛИЩА', ids: ['bank','warehouse','energystorage'] },
+                { title: '🏛️ СПЕЦИАЛЬНЫЕ', ids: ['market','pawnshop'] },
+                { title: '🏟️ ВОЕННЫЕ', ids: ['barracks','hangar','airbase','defense','range','militaryHQ','hospital'] }
+            ];
+
+            categories.forEach(cat => {
+                const catBuildings = availableToBuild.filter(b => cat.ids.includes(b.id));
+                if (catBuildings.length === 0) return;
+
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'buildings-category';
+
+                const titleDiv = document.createElement('div');
+                titleDiv.className = 'buildings-category-title';
+                titleDiv.textContent = cat.title;
+                categoryDiv.appendChild(titleDiv);
+
+                catBuildings.forEach(building => {
+                    const cost = building.cost;
+                    const availability = checkResourcesAvailable(cost);
+                    const profitCheck = wouldProfitGoNegativeWithConstructions(building, 0, 1, cellIndex);
+                    const profitOk = profitCheck.ok;
+                    const cardDisabled = !profitOk;
+                    const btnDisabled = !availability.all || !profitOk;
+
+                    const card = document.createElement('div');
+                    card.className = `building-card ${cardDisabled ? 'disabled' : ''}`;
+                    card.style.cursor = 'default';
+                    let incomeHtml = '', expenseHtml = '';
+                    if (building.baseIncome.capital) incomeHtml += `<span class="stat-item"><span class="stat-icon">💰</span>+${building.baseIncome.capital}/с</span>`;
+                    if (building.baseIncome.materials) incomeHtml += `<span class="stat-item"><span class="stat-icon">⛓️</span>+${building.baseIncome.materials}/с</span>`;
+                    if (building.baseIncome.energy) incomeHtml += `<span class="stat-item"><span class="stat-icon">⚡</span>+${building.baseIncome.energy}/с</span>`;
+                    if (building.baseExpense.capital) expenseHtml += `<span class="stat-item"><span class="stat-icon">💰</span>-${building.baseExpense.capital}/с</span>`;
+                    if (building.baseExpense.materials) expenseHtml += `<span class="stat-item"><span class="stat-icon">⛓️</span>-${building.baseExpense.materials}/с</span>`;
+                    if (building.baseExpense.energy) expenseHtml += `<span class="stat-item"><span class="stat-icon">⚡</span>-${building.baseExpense.energy}/с</span>`;
+
+                    let warningHtml = '';
+                    if (!profitOk) {
+                        warningHtml = `<div class="profit-warning">⚠️ Не хватает прибыли: ${profitCheck.resource}</div>`;
+                    }
+
+                    card.innerHTML = `
+                        <div class="building-name">${building.name}</div>
+                        <div class="stats-line">
+                            ${incomeHtml ? `<div class="income-items">${incomeHtml}</div>` : ''}
+                            ${expenseHtml ? `<div class="expense-items">${expenseHtml}</div>` : ''}
+                        </div>
+                        <div class="building-desc">${building.description}</div>
+                        ${warningHtml}
+                        <div class="card-divider"></div>
+                        <div class="action-row">
+                            <div class="resources-line">
+                                <span class="resource-item"><span class="resource-icon capital">💰</span><span class="resource-value ${!availability.capital ? 'insufficient' : ''}">${formatNumber(cost.capital)}</span></span>
+                                <span class="resource-item"><span class="resource-icon materials">⛓️</span><span class="resource-value ${!availability.materials ? 'insufficient' : ''}">${formatNumber(cost.materials)}</span></span>
+                                <span class="resource-item"><span class="resource-icon energy">⚡</span><span class="resource-value ${!availability.energy ? 'insufficient' : ''}">${formatNumber(cost.energy)}</span></span>
+                            </div>
+                            <button class="build-btn" ${btnDisabled ? 'disabled' : ''}>Построить <span class="btn-time">⏱️${formatTime(building.buildTime)}</span></button>
+                        </div>
+                    `;
+                    const btn = card.querySelector('.build-btn');
+                    if (btn && !btnDisabled) {
+                        btn.onclick = (e) => {
+                            e.stopPropagation();
+                            startConstruction(selectedCellIndex, building.id, 1, cost, building.buildTime);
+                        };
+                    }
+                    categoryDiv.appendChild(card);
+                });
+
+                buildingsList.appendChild(categoryDiv);
+            });
+        }
+        document.getElementById('buildModal').classList.add('active');
+    }
+
+    function openUpgradeModal(cellIndex) {
+        if (isCellUnderConstruction(cellIndex)) {
+            alert('Это здание сейчас строится/улучшается!');
+            return;
+        }
+        selectedCellIndex = cellIndex;
+        const cellData = cityCells[cellIndex];
+        if (!cellData) {
+            alert('Ошибка: здание не найдено');
+            return;
+        }
+        const building = getBuildingById(cellData.id);
+        if (!building) return;
+
+        const currentLevel = cellData.level;
+        const nextLevel = currentLevel + 1;
+
+        const upgradeCost = getUpgradeCost(building, currentLevel);
+        const upgradeTime = getUpgradeTime(building, currentLevel);
+        const availability = checkResourcesAvailable(upgradeCost);
+
+        const profitCheck = wouldProfitGoNegativeWithConstructions(building, currentLevel, nextLevel, cellIndex);
+        const profitOk = profitCheck.ok;
+
+        function formatResourcesForLevel(level) {
+            let parts = [];
+
+            // Для зданий-хранилищ показываем заполненность ресурса
+            if (building.specialEffect && building.specialEffect.type === 'limit') {
+                let resource = building.specialEffect.resource; // 'capital', 'materials', 'energy'
+                let currentValue = playerResources[resource];
+                let limit = getResourceLimitForLevel(building, level);
+                let icon = resource === 'capital' ? '💰' : (resource === 'materials' ? '⛓️' : '⚡');
+                parts.push(`<span class="upgrade-military-item"><span class="icon">${icon}</span>${formatNumber(currentValue)}/${formatLimit(limit)}</span>`);
+            }
+
+            // Для зданий, дающих вместимость юнитов, показываем текущую заполненность
+            if (building.specialEffect && building.specialEffect.type === 'unitCapacity') {
+                let unitType = building.specialEffect.unit; // 'infantry', 'vehicle', 'air', 'pvo'
+                let unit = units.find(u => {
+                    if (unitType === 'infantry' && u.id === 1) return true;
+                    if (unitType === 'vehicle' && u.id === 2) return true;
+                    if (unitType === 'air' && u.id === 3) return true;
+                    if (unitType === 'pvo' && u.id === 4) return true;
+                    return false;
+                });
+                if (unit) {
+                    let capacity = getUnitCapacity(building.specialEffect.base, level);
+                    parts.push(`<span class="upgrade-military-item"><span class="icon">⚙️</span>${unit.count}/${capacity}</span>`);
+                }
+            }
+
+            // Основные ресурсы
+            if (building.baseIncome.capital) {
+                let val = getIncomeForLevel(building.baseIncome.capital, level);
+                parts.push(`<span class="upgrade-resource-item income"><span class="icon">💰</span>+${val}/c</span>`);
+            }
+            if (building.baseIncome.materials) {
+                let val = getIncomeForLevel(building.baseIncome.materials, level);
+                parts.push(`<span class="upgrade-resource-item income"><span class="icon">⛓️</span>+${val}/c</span>`);
+            }
+            if (building.baseIncome.energy) {
+                let val = getIncomeForLevel(building.baseIncome.energy, level);
+                parts.push(`<span class="upgrade-resource-item income"><span class="icon">⚡</span>+${val}/c</span>`);
+            }
+            if (building.baseExpense.capital) {
+                let val = getExpenseForLevel(building.baseExpense.capital, level);
+                parts.push(`<span class="upgrade-resource-item expense"><span class="icon">💰</span>-${val}/c</span>`);
+            }
+            if (building.baseExpense.materials) {
+                let val = getExpenseForLevel(building.baseExpense.materials, level);
+                parts.push(`<span class="upgrade-resource-item expense"><span class="icon">⛓️</span>-${val}/c</span>`);
+            }
+            if (building.baseExpense.energy) {
+                let val = getExpenseForLevel(building.baseExpense.energy, level);
+                parts.push(`<span class="upgrade-resource-item expense"><span class="icon">⚡</span>-${val}/c</span>`);
+            }
+
+            // Военные эффекты
+            if (building.specialEffect) {
+                if (building.specialEffect.type === 'unitCapacity') {
+                    // уже добавили выше
+                } else if (building.specialEffect.type === 'unitAttackDefense') {
+                    let mult = getAttackDefenseMultiplier(level);
+                    parts.push(`<span class="upgrade-military-item"><span class="icon">⚔️</span>+${Math.round((mult-1)*100)}%</span>`);
+                } else if (building.specialEffect.type === 'unitHealth') {
+                    let mult = getHealthMultiplier(level);
+                    parts.push(`<span class="upgrade-military-item"><span class="icon">❤️</span>+${Math.round((mult-1)*100)}%</span>`);
+                } else if (building.specialEffect.type === 'unitCreateTime') {
+                    let mult = getCreateTimeMultiplier(level);
+                    parts.push(`<span class="upgrade-military-item"><span class="icon">⏱️</span>-${Math.round((1-mult)*100)}%</span>`);
+                }
+            }
+
+            // Рабочие места
+            if (building.jobsPerLevel > 0) {
+                let jobs = getValueAtLevel(building.jobsPerLevel, level);
+                parts.push(`<span class="upgrade-jobs-item"><span class="icon">👷</span>${jobs}</span>`);
+            }
+            if (building.id === 'residential') {
+                let workersVal = getValueAtLevel(40, level);
+                parts.push(`<span class="upgrade-jobs-item"><span class="icon">👷</span>${workersVal}</span>`);
+            }
+            return parts.join(' ');
+        }
+
+        let currentHtml = formatResourcesForLevel(currentLevel);
+        let nextHtml = formatResourcesForLevel(nextLevel);
+
+        const infoDiv = document.getElementById('upgradeBuildingInfo');
+        infoDiv.innerHTML = `
+            <div class="upgrade-info-block">
+                <div class="upgrade-header">
+                    <span class="upgrade-header-icon">${building.icon}</span>
+                    <span class="upgrade-header-title">${building.name}</span>
+                    <span class="upgrade-header-desc">${building.description}</span>
+                </div>
+                <div class="upgrade-levels-wrapper">
+                    <div class="upgrade-level-row">
+                        <div class="upgrade-level-badge">УР.${currentLevel}</div>
+                        <div class="upgrade-resources-container">${currentHtml}</div>
+                    </div>
+                    <div class="upgrade-transition">
+                        <span class="transition-line"></span>
+                        <span class="transition-arrow">⬇️</span>
+                        <span class="transition-line"></span>
+                    </div>
+                    <div class="upgrade-level-row">
+                        <div class="upgrade-level-badge">УР.${nextLevel}</div>
+                        <div class="upgrade-resources-container">${nextHtml}</div>
+                    </div>
+                </div>
+                <div class="upgrade-cost-section">
+                    <div class="upgrade-cost-title">СТОИМОСТЬ УЛУЧШЕНИЯ</div>
+                    <div class="upgrade-cost-items">
+                        <span class="cost-item ${!availability.capital ? 'insufficient' : ''}">💰${formatNumber(upgradeCost.capital)}</span>
+                        <span class="cost-item ${!availability.materials ? 'insufficient' : ''}">⛓️${formatNumber(upgradeCost.materials)}</span>
+                        <span class="cost-item ${!availability.energy ? 'insufficient' : ''}">⚡${formatNumber(upgradeCost.energy)}</span>
+                    </div>
+                </div>
+            </div>
         `;
-        armyGrid.appendChild(card);
-    });
+
+        document.getElementById('upgradeButtons').innerHTML = `
+            <button class="upgrade-btn cancel" id="cancelUpgrade">ОТМЕНА</button>
+            <button class="upgrade-btn confirm" id="confirmUpgrade">
+                УЛУЧШИТЬ
+                <span class="btn-time-icon">⏱️</span>
+                <span class="btn-time-text" id="upgradeTimeBtn">${formatTime(upgradeTime)}</span>
+            </button>
+        `;
+
+        document.getElementById('cancelUpgrade').onclick = closeAllModals;
+        const confirmBtn = document.getElementById('confirmUpgrade');
+        confirmBtn.disabled = !availability.all || !profitOk;
+        confirmBtn.onclick = () => {
+            let cityHallLevel = 0;
+            let cityHallCell = cityCells.find(c => c && c.id === 'cityhall');
+            if (cityHallCell) cityHallLevel = cityHallCell.level;
+            if (building.id !== 'cityhall' && nextLevel > cityHallLevel) {
+                closeAllModals();
+                showNotification(`Чтобы улучшить здание ${building.name}, получите разрешение в здании Мэрия, повысив его уровень.`);
+                return;
+            }
+            let checkJobs = canUpgradeJobs(selectedCellIndex, nextLevel);
+            if (!checkJobs.ok) {
+                alert(checkJobs.reason);
+                return;
+            }
+            startConstruction(selectedCellIndex, cellData.id, nextLevel, upgradeCost, upgradeTime);
+        };
+
+        document.getElementById('upgradeModal').classList.add('active');
+    }
+
+    function closeAllModals() {
+        document.getElementById('buildModal').classList.remove('active');
+        document.getElementById('upgradeModal').classList.remove('active');
+        document.getElementById('upgradeButtons').innerHTML = `
+            <button class="upgrade-btn cancel" id="cancelUpgrade">ОТМЕНА</button>
+            <button class="upgrade-btn confirm" id="confirmUpgrade">
+                УЛУЧШИТЬ
+                <span class="btn-time-icon">⏱️</span>
+                <span class="btn-time-text" id="upgradeTimeBtn">30с</span>
+            </button>
+        `;
+        document.getElementById('cancelUpgrade').onclick = closeAllModals;
+    }
+
+    function checkResourceAvailability(unitId, amount) {
+        const unit = units.find(u => u.id === unitId);
+        if (!unit) return { capital: true, materials: true, energy: true };
+        return {
+            capital: playerResources.capital >= unit.resources.capital * amount,
+            materials: playerResources.materials >= unit.resources.materials * amount,
+            energy: playerResources.energy >= unit.resources.energy * amount
+        };
+    }
+
+    function getMaxAvailable(unitId) {
+        const unit = units.find(u => u.id === unitId);
+        if (!unit) return 0;
+        const maxByCapital = Math.floor(playerResources.capital / unit.resources.capital);
+        const maxByMaterials = Math.floor(playerResources.materials / unit.resources.materials);
+        const maxByEnergy = Math.floor(playerResources.energy / unit.resources.energy);
+        return Math.min(maxByCapital, maxByMaterials, maxByEnergy);
+    }
+
+    function adjustAllCounters() {
+        let changed = false;
+        units.forEach(unit => {
+            const maxAvailable = getMaxAvailable(unit.id);
+            if (counterValues[unit.id] > maxAvailable) {
+                counterValues[unit.id] = Math.max(1, maxAvailable);
+                changed = true;
+            }
+            updateUnitResources(unit.id);
+            updateCreateButton(unit.id);
+        });
+        if (changed) {
+            units.forEach(unit => {
+                const input = document.getElementById(`counter_${unit.id}`);
+                if (input) input.value = counterValues[unit.id];
+            });
+            renderArmy();
+        } else {
+            units.forEach(unit => updateUnitResources(unit.id));
+        }
+    }
+
+    function updateUnitResources(unitId) {
+        const unit = units.find(u => u.id === unitId);
+        if (!unit) return;
+        const resourcesDiv = document.getElementById(`resources_${unit.id}`);
+        if (resourcesDiv) {
+            const amount = counterValues[unit.id];
+            const nextAmount = amount + 1;
+            const nextAvailability = checkResourceAvailability(unitId, nextAmount);
+            const capitalClass = !nextAvailability.capital ? 'resource-insufficient' : 'resource-sufficient';
+            const materialsClass = !nextAvailability.materials ? 'resource-insufficient' : 'resource-sufficient';
+            const energyClass = !nextAvailability.energy ? 'resource-insufficient' : 'resource-sufficient';
+            resourcesDiv.innerHTML = `
+                <span class="${capitalClass}">💰${formatNumber(unit.resources.capital * amount)}</span>
+                <span class="${materialsClass}">⛓️${formatNumber(unit.resources.materials * amount)}</span>
+                <span class="${energyClass}">⚡${formatNumber(unit.resources.energy * amount)}</span>
+            `;
+        }
+    }
+
+    function changeCounter(unitId, delta) {
+        if (timers[unitId]) return;
+        const currentValue = counterValues[unitId] || 1;
+        const newValue = currentValue + delta;
+        if (newValue >= 1) {
+            const maxAvailable = getMaxAvailable(unitId);
+            if (newValue <= maxAvailable) {
+                counterValues[unitId] = newValue;
+                const input = document.getElementById(`counter_${unitId}`);
+                if (input) input.value = counterValues[unitId];
+                updateUnitResources(unitId);
+                updateCreateButton(unitId);
+            }
+        }
+    }
+
+    function updateCreateButton(unitId) {
+        const unit = units.find(u => u.id === unitId);
+        if (!unit) return;
+        const btn = document.querySelector(`.create-btn[data-unit-id="${unitId}"]`);
+        if (btn && !timers[unitId]) {
+            const amount = counterValues[unitId];
+            const totalTime = unit.createTime * amount * unitMultipliers.createTime;
+            const btnContent = btn.querySelector('.btn-content');
+            if (btnContent) {
+                btnContent.innerHTML = `
+                    <span>СОЗДАТЬ ${amount}</span>
+                    <div class="btn-time">⏱️${formatTime(totalTime)}</div>
+                `;
+            }
+        }
+    }
+
+    window.startPress = function(unitId, delta) {
+        if (timers[unitId]) return;
+        if (pressTimeouts[`${unitId}_${delta}`]) clearTimeout(pressTimeouts[`${unitId}_${delta}`]);
+        if (pressIntervals[`${unitId}_${delta}`]) clearInterval(pressIntervals[`${unitId}_${delta}`]);
+        changeCounter(unitId, delta);
+        pressTimeouts[`${unitId}_${delta}`] = setTimeout(() => {
+            pressIntervals[`${unitId}_${delta}`] = setInterval(() => {
+                changeCounter(unitId, delta);
+            }, 50);
+        }, 400);
+    };
+
+    window.stopPress = function(unitId, delta) {
+        if (pressTimeouts[`${unitId}_${delta}`]) {
+            clearTimeout(pressTimeouts[`${unitId}_${delta}`]);
+            delete pressTimeouts[`${unitId}_${delta}`];
+        }
+        if (pressIntervals[`${unitId}_${delta}`]) {
+            clearInterval(pressIntervals[`${unitId}_${delta}`]);
+            delete pressIntervals[`${unitId}_${delta}`];
+        }
+    };
+
+    window.openManualInput = function(unitId) {
+        if (timers[unitId]) return;
+        currentModalUnitId = unitId;
+        const unit = units.find(u => u.id === unitId);
+        if (!unit) return;
+        tempInputValue = counterValues[unitId].toString();
+        document.getElementById('modalInput').value = tempInputValue;
+        document.getElementById('modalTitle').textContent = `${unit.icon} ${unit.name}`;
+        document.getElementById('modalCapital').textContent = formatNumber(playerResources.capital);
+        document.getElementById('modalMaterials').textContent = formatNumber(playerResources.materials);
+        document.getElementById('modalEnergy').textContent = formatNumber(playerResources.energy);
+        updateModalInfo(unitId, tempInputValue);
+        document.getElementById('modalOverlay').classList.add('active');
+    };
+
+    function updateModalInfo(unitId, valueStr) {
+        const unit = units.find(u => u.id === unitId);
+        if (!unit) return;
+        let value = parseInt(valueStr) || 0;
+        const maxAvailable = getMaxAvailable(unitId);
+        if (value > maxAvailable) {
+            value = maxAvailable;
+            tempInputValue = maxAvailable.toString();
+            document.getElementById('modalInput').value = tempInputValue;
+        }
+        const nextAmount = value + 1;
+        const nextAvailability = checkResourceAvailability(unitId, nextAmount);
+        const totalResources = {
+            capital: unit.resources.capital * value,
+            materials: unit.resources.materials * value,
+            energy: unit.resources.energy * value
+        };
+        const totalTime = unit.createTime * value * unitMultipliers.createTime;
+        const capitalClass = !nextAvailability.capital ? 'resource-insufficient' : 'resource-sufficient';
+        const materialsClass = !nextAvailability.materials ? 'resource-insufficient' : 'resource-sufficient';
+        const energyClass = !nextAvailability.energy ? 'resource-insufficient' : 'resource-sufficient';
+        document.getElementById('modalInfo').innerHTML = `
+            <div class="modal-info-title">ТРЕБУЕТСЯ РЕСУРСОВ:</div>
+            <div class="modal-resources">
+                <span class="${capitalClass}">💰${formatNumber(totalResources.capital)}</span>
+                <span class="${materialsClass}">⛓️${formatNumber(totalResources.materials)}</span>
+                <span class="${energyClass}">⚡${formatNumber(totalResources.energy)}</span>
+            </div>
+            <div class="modal-time">⏱️ ВРЕМЯ: ${formatTime(totalTime)}</div>
+        `;
+    }
+
+    window.addDigit = function(digit) {
+        if (digit === '⌫') {
+            tempInputValue = tempInputValue.slice(0, -1);
+            if (tempInputValue === '') tempInputValue = '0';
+        } else {
+            if (tempInputValue === '0') {
+                tempInputValue = digit.toString();
+            } else {
+                tempInputValue += digit.toString();
+            }
+        }
+        document.getElementById('modalInput').value = tempInputValue;
+        updateModalInfo(currentModalUnitId, tempInputValue);
+    };
+
+    window.applyManualInput = function() {
+        if (!currentModalUnitId) return;
+        const newValue = parseInt(tempInputValue) || 1;
+        const maxAvailable = getMaxAvailable(currentModalUnitId);
+        if (newValue <= maxAvailable) {
+            counterValues[currentModalUnitId] = newValue;
+            const input = document.getElementById(`counter_${currentModalUnitId}`);
+            if (input) input.value = newValue;
+            updateUnitResources(currentModalUnitId);
+            updateCreateButton(currentModalUnitId);
+            closeModal();
+        } else {
+            alert(`Максимальное доступное количество: ${maxAvailable}`);
+        }
+    };
+
+    window.closeModal = function() {
+        document.getElementById('modalOverlay').classList.remove('active');
+        currentModalUnitId = null;
+        tempInputValue = '';
+    };
+
+    function resetCounter(unitId) {
+        counterValues[unitId] = defaultCounterValues[unitId];
+        const input = document.getElementById(`counter_${unitId}`);
+        if (input) input.value = counterValues[unitId];
+        updateUnitResources(unitId);
+    }
+
+    window.createUnit = function(unitId) {
+        const unit = units.find(u => u.id === unitId);
+        if (!unit) return;
+        if (timers[unitId]) {
+            alert(`${unit.name} УЖЕ СОЗДАЮТСЯ!`);
+            return;
+        }
+
+        // Проверка наличия свободных мест
+        let maxUnits = 0;
+        let buildingName = '';
+        if (unitId === 1) {
+            maxUnits = unitMultipliers.maxInfantry;
+            buildingName = 'Казарма';
+        } else if (unitId === 2) {
+            maxUnits = unitMultipliers.maxVehicle;
+            buildingName = 'Ангар';
+        } else if (unitId === 3) {
+            maxUnits = unitMultipliers.maxAir;
+            buildingName = 'Авиабаза';
+        } else if (unitId === 4) {
+            maxUnits = unitMultipliers.maxPvo;
+            buildingName = 'Укрепление';
+        }
+
+        if (maxUnits === 0) {
+            showNotification(`Сначала постройте здание "${buildingName}" для размещения юнитов.`);
+            return;
+        }
+
+        const currentCount = unit.count;
+        const amount = counterValues[unitId] || 1;
+        if (currentCount + amount > maxUnits) {
+            showNotification(`Недостаточно мест в ${buildingName}. Улучшите здание, чтобы увеличить вместимость.`);
+            return;
+        }
+
+        const availability = checkResourceAvailability(unitId, amount);
+        if (!availability.capital || !availability.materials || !availability.energy) {
+            alert(`НЕДОСТАТОЧНО РЕСУРСОВ ДЛЯ СОЗДАНИЯ ${amount} ЕД. ${unit.name}!`);
+            return;
+        }
+
+        playerResources.capital -= unit.resources.capital * amount;
+        playerResources.materials -= unit.resources.materials * amount;
+        playerResources.energy -= unit.resources.energy * amount;
+        clampResources();
+        updateResourcesDisplay();
+        adjustAllCounters();
+        startCreationTimer(unitId, amount);
+        resetCounter(unitId);
+    };
+
+    function startCreationTimer(unitId, amount) {
+        const unit = units.find(u => u.id === unitId);
+        if (!unit) return;
+        const totalTime = unit.createTime * amount * unitMultipliers.createTime;
+        const startTime = Date.now();
+        const endTime = startTime + (totalTime * 1000);
+        timers[unitId] = { endTime, amount, startTime, totalTime };
+        renderArmy();
+        const interval = setInterval(() => {
+            const now = Date.now();
+            if (!timers[unitId]) {
+                clearInterval(interval);
+                return;
+            }
+            if (now >= timers[unitId].endTime) {
+                clearInterval(interval);
+                unit.count += timers[unitId].amount;
+                delete timers[unitId];
+                renderArmy();
+                updateTotalArmy();
+            } else {
+                const remaining = Math.max(0, Math.ceil((timers[unitId].endTime - now) / 1000));
+                const progress = ((now - timers[unitId].startTime) / (timers[unitId].totalTime * 1000)) * 100;
+                const btn = document.querySelector(`.create-btn[data-unit-id="${unitId}"]`);
+                if (btn) {
+                    const progressBar = btn.querySelector('.timer-progress');
+                    const btnContent = btn.querySelector('.btn-content');
+                    if (progressBar) progressBar.style.width = `${Math.min(100, progress)}%`;
+                    if (btnContent) {
+                        btnContent.innerHTML = `
+                            <span>СОЗДАЁТСЯ ${timers[unitId].amount}</span>
+                            <div class="btn-time">⏱️${formatTime(remaining)}</div>
+                        `;
+                    }
+                }
+            }
+        }, 100);
+        timers[unitId].interval = interval;
+    }
+
+    function updateTotalArmy() {
+        const total = units.reduce((sum, unit) => sum + unit.count, 0);
+        document.getElementById('totalArmy').textContent = `${total} ЕД.`;
+    }
+
+    function renderArmy() {
+        const grid = document.getElementById('armyGrid');
+        grid.innerHTML = '';
+        units.forEach(unit => {
+            const card = document.createElement('div');
+            card.className = 'unit-card';
+            const isCreating = !!timers[unit.id];
+            const amount = counterValues[unit.id] || 1;
+            const nextAmount = amount + 1;
+            const nextAvailability = checkResourceAvailability(unit.id, nextAmount);
+            const totalResources = {
+                capital: unit.resources.capital * amount,
+                materials: unit.resources.materials * amount,
+                energy: unit.resources.energy * amount
+            };
+            const totalTime = unit.createTime * amount * unitMultipliers.createTime;
+            const capitalClass = !nextAvailability.capital ? 'resource-insufficient' : 'resource-sufficient';
+            const materialsClass = !nextAvailability.materials ? 'resource-insufficient' : 'resource-sufficient';
+            const energyClass = !nextAvailability.energy ? 'resource-insufficient' : 'resource-sufficient';
+
+            const displayHealth = Math.round(unit.health * unitMultipliers.health);
+            const displayAttack = Math.round(unit.attack * unitMultipliers.attack);
+            const displayDefense = Math.round(unit.defense * unitMultipliers.defense);
+
+            // Максимальное количество для этого типа юнитов
+            let maxUnits = 0;
+            if (unit.id === 1) maxUnits = unitMultipliers.maxInfantry;
+            else if (unit.id === 2) maxUnits = unitMultipliers.maxVehicle;
+            else if (unit.id === 3) maxUnits = unitMultipliers.maxAir;
+            else if (unit.id === 4) maxUnits = unitMultipliers.maxPvo;
+
+            let buttonContent = '';
+            if (isCreating) {
+                const remaining = Math.max(0, Math.ceil((timers[unit.id].endTime - Date.now()) / 1000));
+                const progress = ((Date.now() - timers[unit.id].startTime) / (timers[unit.id].totalTime * 1000)) * 100;
+                buttonContent = `
+                    <div class="timer-progress" style="width: ${Math.min(100, progress)}%"></div>
+                    <div class="btn-content">
+                        <span>СОЗДАЁТСЯ ${timers[unit.id].amount}</span>
+                        <div class="btn-time">⏱️${formatTime(remaining)}</div>
+                    </div>
+                `;
+            } else {
+                buttonContent = `
+                    <div class="timer-progress" style="width: 0%"></div>
+                    <div class="btn-content">
+                        <span>СОЗДАТЬ ${amount}</span>
+                        <div class="btn-time">⏱️${formatTime(totalTime)}</div>
+                    </div>
+                `;
+            }
+            card.innerHTML = `
+                <div class="unit-header">
+                    <span class="unit-name" onclick="openManualInput(${unit.id})">${unit.icon} ${unit.name}</span>
+                    <span class="unit-count" onclick="openManualInput(${unit.id})">${unit.count}</span>
+                </div>
+                <div class="unit-capacity">⚙️ мест: ${maxUnits}</div> <!-- иконка изменена, выравнивание влево -->
+                <div class="unit-stats-row">
+                    <span>❤️${displayHealth}</span>
+                    <span>⚔️${displayAttack}</span>
+                    <span>🛡️${displayDefense}</span>
+                </div>
+                <div class="unit-resources" id="resources_${unit.id}">
+                    <span class="${capitalClass}">💰${formatNumber(totalResources.capital)}</span>
+                    <span class="${materialsClass}">⛓️${formatNumber(totalResources.materials)}</span>
+                    <span class="${energyClass}">⚡${formatNumber(totalResources.energy)}</span>
+                </div>
+                <div class="unit-control">
+                    <div class="counter">
+                        <button class="counter-btn" 
+                                onmousedown="startPress(${unit.id}, -1)" 
+                                onmouseup="stopPress(${unit.id}, -1)" 
+                                onmouseleave="stopPress(${unit.id}, -1)"
+                                ontouchstart="startPress(${unit.id}, -1)" 
+                                ontouchend="stopPress(${unit.id}, -1)"
+                                ontouchcancel="stopPress(${unit.id}, -1)"
+                                ${isCreating ? 'disabled' : ''}>−</button>
+                        <input type="text" class="counter-input" id="counter_${unit.id}" value="${amount}" readonly onclick="openManualInput(${unit.id})">
+                        <button class="counter-btn" 
+                                onmousedown="startPress(${unit.id}, 1)" 
+                                onmouseup="stopPress(${unit.id}, 1)" 
+                                onmouseleave="stopPress(${unit.id}, 1)"
+                                ontouchstart="startPress(${unit.id}, 1)" 
+                                ontouchend="stopPress(${unit.id}, 1)"
+                                ontouchcancel="stopPress(${unit.id}, 1)"
+                                ${isCreating ? 'disabled' : ''}>+</button>
+                    </div>
+                    <button class="create-btn" data-unit-id="${unit.id}" onclick="createUnit(${unit.id})" ${isCreating ? 'disabled' : ''}>
+                        ${buttonContent}
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+        updateTotalArmy();
+    }
+
+    function createNumberPad() {
+        const pad = document.getElementById('numberPad');
+        const digits = [1,2,3,4,5,6,7,8,9,'⌫',0,'C'];
+        digits.forEach(digit => {
+            const btn = document.createElement('div');
+            btn.className = 'number-btn';
+            btn.textContent = digit;
+            btn.onclick = () => {
+                if (digit === 'C') {
+                    tempInputValue = '0';
+                    document.getElementById('modalInput').value = '0';
+                    updateModalInfo(currentModalUnitId, '0');
+                } else {
+                    addDigit(digit);
+                }
+            };
+            pad.appendChild(btn);
+        });
+    }
+
+    function init() {
+        updateUsedBuildingsSet();
+        createNumberPad();
+        renderArmy();
+        renderCity();
+        recalcCityStats();
+        updateResourcesDisplay();
+        updateInterval = setInterval(processTimeTick, 200);
+
+        document.getElementById('modalApply').onclick = applyManualInput;
+        document.getElementById('modalCancel').onclick = closeModal;
+        document.getElementById('modalOverlay').onclick = (e) => {
+            if (e.target === document.getElementById('modalOverlay')) closeModal();
+        };
+        document.getElementById('closeBuildModal').onclick = closeAllModals;
+        document.getElementById('cancelUpgrade').onclick = closeAllModals;
+        document.getElementById('buildModal').onclick = (e) => {
+            if (e.target === document.getElementById('buildModal')) closeAllModals();
+        };
+        document.getElementById('upgradeModal').onclick = (e) => {
+            if (e.target === document.getElementById('upgradeModal')) closeAllModals();
+        };
+    }
+
+    init();
 </script>
 </body>
 </html>
