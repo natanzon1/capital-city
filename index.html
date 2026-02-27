@@ -39,22 +39,22 @@
             top: 0;
             z-index: 100;
             background: #132a40;
-            padding: 5px 15px 3px 15px; /* уменьшено */
+            padding: 5px 15px 3px 15px;
         }
 
         .header {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px; /* уменьшено */
+            gap: 4px;
             background: #1e3750;
             border-radius: 18px;
-            padding: 4px 10px; /* уменьшено */
+            padding: 4px 10px;
             border: 1px solid #4a7a9c;
         }
 
         .title {
-            font-size: 22px; /* уменьшено с 24px */
+            font-size: 22px;
             font-weight: 800;
             color: #ffd700;
             text-align: center;
@@ -95,12 +95,12 @@
             font-size: 14px;
         }
         .resource .resource-value {
-            font-size: 12px; /* уменьшено */
+            font-size: 12px;
             font-weight: 700;
             color: white;
         }
         .resource .resource-limit {
-            font-size: 10px; /* уменьшено */
+            font-size: 10px;
             color: #a0d0ff;
             margin-left: 1px;
         }
@@ -111,7 +111,7 @@
             padding: 0 15px 5px 15px;
             display: flex;
             flex-direction: column;
-            gap: 6px; /* уменьшено */
+            gap: 6px;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -124,7 +124,7 @@
         .resources-card {
             background: #1e3750;
             border-radius: 18px;
-            padding: 6px 8px 8px 8px; /* уменьшено */
+            padding: 6px 8px 8px 8px;
             border: 1px solid #4a7a9c;
         }
 
@@ -154,7 +154,7 @@
 
         .header-cell {
             color: #a0d0ff;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             font-weight: 600;
             text-align: center;
         }
@@ -168,7 +168,7 @@
             grid-template-columns: 100px 1fr 1fr 1fr;
             align-items: center;
             padding: 3px 6px;
-            font-size: 12px; /* уменьшено */
+            font-size: 12px;
         }
 
         .resource-name {
@@ -177,7 +177,7 @@
             gap: 6px;
             color: #a0d0ff;
             font-weight: 600;
-            font-size: 13px; /* уменьшено */
+            font-size: 13px;
         }
 
         .resource-name .icon {
@@ -188,21 +188,21 @@
             color: #ffd700;
             font-weight: 600;
             text-align: center;
-            font-size: 12px; /* уменьшено */
+            font-size: 12px;
         }
 
         .expense-value {
             color: #ff6b6b;
             font-weight: 600;
             text-align: center;
-            font-size: 12px; /* уменьшено */
+            font-size: 12px;
         }
 
         .profit-value {
             color: #32cd32;
             font-weight: 600;
             text-align: center;
-            font-size: 12px; /* уменьшено */
+            font-size: 12px;
         }
 
         /* Таблица хранилища */
@@ -213,7 +213,7 @@
         }
         .storage-title {
             color: #ffd700;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             text-align: center;
             margin-bottom: 4px;
             text-transform: uppercase;
@@ -224,7 +224,7 @@
             grid-template-columns: 1fr 1fr 1fr;
             text-align: center;
             color: #a0d0ff;
-            font-size: 10px; /* уменьшено */
+            font-size: 10px;
             font-weight: 600;
             background: #1e3f5a;
             border-radius: 6px;
@@ -236,7 +236,7 @@
             grid-template-columns: 1fr 1fr 1fr;
             text-align: center;
             color: #ffd700;
-            font-size: 12px; /* уменьшено */
+            font-size: 12px;
             font-weight: 600;
             padding: 2px;
         }
@@ -250,7 +250,7 @@
         .card {
             background: #1e3750;
             border-radius: 18px;
-            padding: 6px 8px 8px 8px; /* уменьшено */
+            padding: 6px 8px 8px 8px;
             border: 1px solid #4a7a9c;
         }
 
@@ -261,30 +261,17 @@
             margin-bottom: 6px;
             text-align: center;
         }
-
-        /* Для армии добавляем контейнер заголовка */
-        .army-title-container {
-            position: relative;
-            width: 100%;
-            margin-bottom: 4px; /* уменьшено */
-        }
-        .army-title-container .card-title {
-            margin-bottom: 0;
-            text-align: center;
-        }
-        .army-title-container .army-total {
-            position: absolute;
-            right: 0;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 13px; /* уменьшено */
-            font-weight: 700;
+        /* Приподнимаем угловые скобки */
+        .swipe-hint {
+            font-size: 20px;
+            line-height: 1;
+            vertical-align: middle;
+            margin: 0 4px;
             color: #ffd700;
-            text-transform: uppercase;
-            white-space: nowrap;
-            background: transparent;
-            border: none;
-            padding: 0;
+            opacity: 0.7;
+            cursor: pointer;
+            display: inline-block;
+            transform: translateY(-2px); /* поднимаем скобки */
         }
 
         /* Стили для свайп-контейнера */
@@ -296,10 +283,9 @@
             display: flex;
             width: 200%;
             transition: transform 0.3s ease;
-            align-items: stretch; /* обеспечивает одинаковую высоту дочерних блоков */
+            align-items: stretch;
         }
 
-        /* Исправленные правила для выравнивания высоты блоков */
         .city-block, .army-block {
             display: flex;
             flex-direction: column;
@@ -308,32 +294,16 @@
         }
 
         .city-block .card {
-            height: auto; /* карточка города занимает только свою естественную высоту */
+            height: auto;
         }
 
         .army-block .card {
             display: flex;
             flex-direction: column;
-            flex: 1; /* карточка армии растягивается на всю высоту блока */
+            flex: 1;
         }
 
-        .army-block .card::after {
-            content: '';
-            display: block;
-            flex: 1; /* занимает всё свободное пространство под карточками */
-        }
-
-        /* Подсказки свайпа в заголовках */
-        .swipe-hint {
-            font-size: 20px;
-            line-height: 1;
-            vertical-align: middle;
-            margin: 0 4px;
-            color: #ffd700;
-            opacity: 0.7;
-            cursor: pointer;
-        }
-
+        /* Стили для сетки города */
         .city-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -342,7 +312,7 @@
         }
 
         .city-cell {
-            aspect-ratio: 1 / 1; /* не трогаем */
+            aspect-ratio: 1 / 1;
             background: #2a4f73;
             border-radius: 8px;
             display: flex;
@@ -383,11 +353,11 @@
             left: 2px;
             background: #ffa500;
             color: black;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             font-weight: 800;
-            min-width: 18px; /* уменьшено */
-            height: 18px; /* уменьшено */
-            border-radius: 9px; /* уменьшено */
+            min-width: 18px;
+            height: 18px;
+            border-radius: 9px;
             padding: 0 4px;
             display: flex;
             align-items: center;
@@ -408,7 +378,7 @@
             right: 2px;
             background: rgba(0, 0, 0, 0.7);
             color: #ffd700;
-            font-size: 9px; /* уменьшено */
+            font-size: 9px;
             font-weight: 700;
             padding: 2px 4px;
             border-radius: 4px;
@@ -417,19 +387,20 @@
         }
 
         .building-icon {
-            font-size: 20px; /* уменьшено */
+            font-size: 20px;
             line-height: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-top: 12px; /* уменьшено */
+            margin-top: 14px;
             margin-bottom: 2px;
             z-index: 1;
+            transform: translateY(2px);
         }
 
         .building-name {
             color: #ffd700;
-            font-size: 7px; /* уменьшено */
+            font-size: 7px;
             font-weight: 700;
             text-align: center;
             text-transform: uppercase;
@@ -443,7 +414,8 @@
             padding: 0 2px;
             margin: 2px 0 4px 0;
             letter-spacing: 0.2px;
-            max-height: 18px; /* уменьшено */
+            max-height: 18px;
+            transform: translateY(2px);
         }
 
         .empty-cell {
@@ -510,16 +482,18 @@
             height: 16px;
         }
 
+        /* Армия */
         .army-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 4px;
+            margin-bottom: 8px;
         }
 
         .unit-card {
             background: #2a4a6a;
             border-radius: 12px;
-            padding: 2px;
+            padding: 4px 4px 4px 4px;
             border: 1px solid #b49450;
             position: relative;
         }
@@ -528,13 +502,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 1px; /* уменьшено */
+            margin-bottom: 2px;
         }
 
         .unit-name {
             color: #ffd700;
             font-weight: 700;
-            font-size: 13px; /* уменьшено */
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             cursor: pointer;
@@ -544,15 +518,17 @@
             background: #1e3f5a;
             border: 1px solid #ffd700;
             border-radius: 10px;
-            padding: 3px 8px; /* уменьшено */
-            font-size: 13px; /* уменьшено */
+            padding: 3px 8px;
+            font-size: 13px;
             font-weight: 700;
             color: white;
             cursor: pointer;
+            margin-top: 0;
+            margin-right: 2px;
         }
 
         .unit-capacity {
-            font-size: 9px; /* уменьшено */
+            font-size: 9px;
             color: #a0d0ff;
             text-align: left;
             margin-bottom: 2px;
@@ -566,9 +542,9 @@
             align-items: center;
             background: #1e3f5a;
             border-radius: 6px;
-            padding: 3px 5px; /* уменьшено */
+            padding: 3px 5px;
             margin-bottom: 2px;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
         }
 
         .unit-stats-row span {
@@ -584,9 +560,9 @@
             justify-content: space-around;
             background: #1e3f5a;
             border-radius: 6px;
-            padding: 3px 4px; /* уменьшено */
+            padding: 3px 4px;
             margin-bottom: 2px;
-            font-size: 10px; /* уменьшено */
+            font-size: 10px;
         }
 
         .unit-resources span {
@@ -621,9 +597,9 @@
             background: #3a5f7a;
             border: 1px solid #ffd700;
             border-radius: 5px;
-            width: 30px; /* уменьшено */
-            height: 30px; /* уменьшено */
-            font-size: 16px; /* уменьшено */
+            width: 28px;
+            height: 28px;
+            font-size: 16px;
             font-weight: 700;
             color: white;
             cursor: pointer;
@@ -646,14 +622,14 @@
         }
 
         .counter-input {
-            width: 40px; /* уменьшено */
+            width: 38px;
             text-align: center;
             background: #1e3f5a;
             border: 1px solid #ffd700;
             border-radius: 5px;
             padding: 4px 0;
             color: white;
-            font-size: 13px; /* уменьшено */
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
         }
@@ -663,10 +639,10 @@
             background: #2a5f7a;
             border: 1px solid #ffd700;
             border-radius: 6px;
-            padding: 4px 4px;
+            padding: 4px 2px;
             color: white;
             font-weight: 700;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             cursor: pointer;
             width: 100%;
             text-align: center;
@@ -677,7 +653,7 @@
             justify-content: center;
             gap: 2px;
             text-transform: uppercase;
-            min-height: 36px; /* уменьшено */
+            min-height: 34px;
         }
 
         .create-btn:active:not(:disabled) {
@@ -714,12 +690,24 @@
         }
 
         .btn-time {
-            font-size: 10px; /* уменьшено */
+            font-size: 10px;
             color: #ffd700;
             font-weight: 600;
         }
 
-        /* УВЕЛИЧЕННОЕ НИЖНЕЕ МЕНЮ (немного уменьшено) */
+        /* Общее количество армии внизу */
+        .army-total-bottom {
+            font-size: 16px;
+            font-weight: 800;
+            color: #ffd700;
+            text-align: center;
+            text-transform: uppercase;
+            margin-top: 6px;
+            padding-top: 4px;
+            border-top: 1px dashed #ffd700;
+        }
+
+        /* УВЕЛИЧЕННОЕ НИЖНЕЕ МЕНЮ */
         .bottom-menu {
             position: sticky;
             bottom: 0;
@@ -729,7 +717,7 @@
             display: flex;
             justify-content: space-between;
             align-items: stretch;
-            height: 52px; /* уменьшено с 60px */
+            height: 52px;
         }
 
         .menu-btn {
@@ -738,7 +726,7 @@
             border: none;
             border-right: 2px solid #ffd700;
             color: white;
-            font-size: 13px; /* уменьшено */
+            font-size: 13px;
             font-weight: 600;
             text-transform: uppercase;
             cursor: pointer;
@@ -760,7 +748,7 @@
         }
 
         .menu-icon {
-            font-size: 22px; /* уменьшено */
+            font-size: 22px;
             filter: drop-shadow(0 2px 2px gold);
         }
 
@@ -774,12 +762,12 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             font-weight: 600;
             color: #87cefa;
         }
 
-        /* Общие стили для модальных окон (без изменений) */
+        /* Модальные окна: улучшенное центрирование и ограничение высоты */
         .modal-overlay,
         .build-modal-overlay,
         .upgrade-modal-overlay,
@@ -788,7 +776,8 @@
         .market-exchange-modal-overlay,
         .lombard-choice-modal-overlay,
         .market-choice-modal-overlay,
-        .confirm-modal-overlay {
+        .confirm-modal-overlay,
+        .notification-modal-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -799,31 +788,19 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
-        }
-
-        .notification-modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 2100;
-            align-items: center;
-            justify-content: center;
+            padding: 10px;
         }
 
         .modal-overlay.active,
         .build-modal-overlay.active,
         .upgrade-modal-overlay.active,
-        .notification-modal-overlay.active,
         .construction-modal-overlay.active,
         .exchange-modal-overlay.active,
         .market-exchange-modal-overlay.active,
         .lombard-choice-modal-overlay.active,
         .market-choice-modal-overlay.active,
-        .confirm-modal-overlay.active {
+        .confirm-modal-overlay.active,
+        .notification-modal-overlay.active {
             display: flex;
         }
 
@@ -833,9 +810,87 @@
             border: 2px solid #ffd700;
             padding: 20px;
             width: 90%;
-            max-width: 300px;
+            max-width: 340px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
+        /* Специально для окна строительства */
+        .build-modal {
+            background: #132a40;
+            border-radius: 28px;
+            border: 2px solid #ffd700;
+            width: 92%;
+            max-width: 340px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .buildings-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        /* Компактные карточки зданий */
+        .building-card {
+            background: #1a3349;
+            border: 2px solid #3a5f7a;
+            border-radius: 16px;
+            padding: 8px 8px;
+            margin-bottom: 6px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.2s;
+            cursor: default;
+            position: relative;
+        }
+
+        .building-card .building-name {
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .stats-line {
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .building-desc {
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .profit-warning {
+            font-size: 10px;
+            margin-top: 3px;
+        }
+
+        .action-row {
+            gap: 4px;
+        }
+
+        .resources-line {
+            gap: 8px;
+        }
+
+        .resource-item {
+            font-size: 11px;
+        }
+
+        .build-btn {
+            padding: 4px 12px;
+            font-size: 11px;
+            min-width: 90px;
+        }
+
+        /* Остальные стили модальных окон без изменений */
         .modal-title {
             color: #ffd700;
             font-size: 18px;
@@ -991,250 +1046,6 @@
             background: #3a5f7a;
         }
 
-        .build-modal {
-            background: #132a40;
-            border-radius: 28px;
-            border: 2px solid #ffd700;
-            width: 92%;
-            max-width: 340px;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-        }
-
-        .modal-header {
-            background: #1e3750;
-            padding: 14px 18px;
-            border-bottom: 2px solid #ffd700;
-            flex-shrink: 0;
-        }
-
-        .modal-header .modal-title {
-            color: #ffd700;
-            font-size: 20px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            text-align: center;
-            margin-bottom: 0;
-        }
-
-        .buildings-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            scrollbar-width: thin;
-            scrollbar-color: #ffd700 #2a4a6a;
-        }
-
-        .buildings-container::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .buildings-container::-webkit-scrollbar-track {
-            background: #2a4a6a;
-            border-radius: 10px;
-        }
-
-        .buildings-container::-webkit-scrollbar-thumb {
-            background: #ffd700;
-            border-radius: 10px;
-        }
-
-        .buildings-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .buildings-category {
-            margin-bottom: 8px;
-        }
-
-        .buildings-category-title {
-            color: #ffd700;
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #ffd700;
-            padding-bottom: 4px;
-        }
-
-        .building-card {
-            background: #1a3349;
-            border: 2px solid #3a5f7a;
-            border-radius: 16px;
-            padding: 12px 10px;
-            margin-bottom: 8px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: opacity 0.2s;
-            cursor: default;
-            position: relative;
-        }
-
-        .building-card:hover {
-            background: #1e3f5a;
-        }
-
-        .building-card.disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .building-card .building-name {
-            color: #ffd700;
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 6px;
-            -webkit-line-clamp: 1;
-            max-height: none;
-            text-align: center;
-            width: 100%;
-        }
-
-        .stats-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 6px;
-            flex-wrap: wrap;
-            font-size: 12px; /* уменьшено */
-            width: 100%;
-        }
-
-        .income-items, .expense-items, .jobs-items {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .income-items {
-            color: #90EE90;
-        }
-        .expense-items {
-            color: #ffb6b6;
-        }
-        .jobs-items {
-            color: #a0d0ff;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-        }
-
-        .stat-icon {
-            font-size: 13px; /* уменьшено */
-        }
-
-        .building-desc {
-            color: #a0d0ff;
-            font-size: 12px; /* уменьшено */
-            margin-bottom: 10px;
-            font-style: italic;
-            text-align: center;
-            width: 100%;
-        }
-
-        .profit-warning {
-            color: #ff6b6b;
-            font-size: 11px; /* уменьшено */
-            margin-top: 5px;
-            font-weight: 600;
-        }
-
-        .card-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            margin: 8px 0 10px 0;
-            width: 100%;
-        }
-
-        .action-row {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-        }
-
-        .resources-line {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            flex-wrap: nowrap;
-            width: 100%;
-        }
-
-        .resource-item {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            color: #ffffff;
-            font-size: 12px; /* уменьшено */
-            white-space: nowrap;
-        }
-
-        .resource-icon {
-            font-size: 13px; /* уменьшено */
-        }
-
-        .resource-icon.capital { color: #ffd700; }
-        .resource-icon.materials { color: #a0d0ff; }
-        .resource-icon.energy { color: #87cefa; }
-
-        .resource-value.insufficient {
-            color: #ff6b6b;
-        }
-
-        .build-btn {
-            background: #2a5f7a;
-            border: none;
-            border-radius: 16px;
-            padding: 6px 16px;
-            color: white;
-            font-weight: 600;
-            font-size: 12px; /* уменьшено */
-            cursor: pointer;
-            white-space: nowrap;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-            box-shadow: 0 2px 0 #1a3b4f;
-            min-width: 110px;
-            transition: opacity 0.2s;
-        }
-
-        .build-btn:active:not(:disabled) {
-            transform: translateY(2px);
-            box-shadow: 0 1px 0 #1a3b4f;
-        }
-
-        .build-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            pointer-events: none;
-        }
-
-        .btn-time {
-            display: flex;
-            align-items: center;
-            gap: 2px;
-            color: #ffd700;
-            font-size: 11px; /* уменьшено */
-        }
-
         .close-btn {
             background: #6a2a2a;
             border: none;
@@ -1334,7 +1145,7 @@
         .upgrade-level-badge {
             background: #ffa500;
             color: black;
-            font-size: 12px; /* уменьшено */
+            font-size: 12px;
             font-weight: 800;
             padding: 2px 10px;
             border-radius: 14px;
@@ -1359,7 +1170,7 @@
             display: flex;
             align-items: center;
             gap: 3px;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             font-weight: 700;
             white-space: nowrap;
         }
@@ -1373,14 +1184,14 @@
         }
 
         .upgrade-resource-item .icon {
-            font-size: 12px; /* уменьшено */
+            font-size: 12px;
         }
 
         .upgrade-military-item {
             display: flex;
             align-items: center;
             gap: 3px;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             font-weight: 700;
             color: #87cefa;
         }
@@ -1390,7 +1201,7 @@
             align-items: center;
             gap: 3px;
             color: #a0d0ff;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             font-weight: 700;
         }
 
@@ -1427,7 +1238,7 @@
 
         .upgrade-cost-title {
             color: #a0d0ff;
-            font-size: 9px; /* уменьшено */
+            font-size: 9px;
             margin-bottom: 5px;
             text-align: center;
             text-transform: uppercase;
@@ -1446,7 +1257,7 @@
             align-items: center;
             gap: 2px;
             color: white;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             white-space: nowrap;
         }
 
@@ -1461,11 +1272,11 @@
 
         .upgrade-btn {
             flex: 1;
-            height: 40px; /* уменьшено */
+            height: 40px;
             border: 1px solid #ffd700;
             border-radius: 8px;
             font-weight: 700;
-            font-size: 11px; /* уменьшено */
+            font-size: 11px;
             cursor: pointer;
             text-transform: uppercase;
             display: flex;
@@ -1504,12 +1315,12 @@
 
         .btn-time-icon {
             color: #ffd700;
-            font-size: 10px; /* уменьшено */
+            font-size: 10px;
         }
 
         .btn-time-text {
             color: #ffd700;
-            font-size: 10px; /* уменьшено */
+            font-size: 10px;
             font-weight: 600;
         }
 
@@ -1697,22 +1508,7 @@
             background: #3a6f8a;
         }
 
-        .close-btn {
-            background: #6a2a2a;
-            border: 1px solid #ffd700;
-            border-radius: 8px;
-            padding: 10px;
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            width: 100%;
-            text-transform: uppercase;
-            margin: 0 auto;
-            display: block;
-        }
-
-        /* Модальное окно обмена ломбарда */
+        /* Остальные стили модальных окон обмена без изменений */
         .exchange-modal,
         .market-exchange-modal {
             background: #1e3750;
@@ -1802,7 +1598,6 @@
             white-space: nowrap;
         }
 
-        /* для рынка убираем иконку и баланс */
         .market-exchange-modal .item-icon,
         .market-exchange-modal .item-balance {
             display: none;
@@ -1894,7 +1689,6 @@
             margin-top: 2px;
         }
 
-        /* Общие стили для кнопок в окнах обмена */
         .item-actions button {
             flex: 1;
             border: 1px solid #ffd700;
@@ -1911,13 +1705,11 @@
             opacity: 0.8;
         }
 
-        /* Ломбард: кнопки покупки и продажи (как у улучшения) */
         .exchange-modal .item-actions button.buy,
         .exchange-modal .item-actions button.sell {
             background: #2a5f7a;
         }
 
-        /* Рынок: все кнопки обмена (как у улучшения) */
         .market-exchange-modal .item-actions button {
             background: #2a5f7a;
             font-size: 14px;
@@ -1937,7 +1729,6 @@
             margin-top: 8px;
         }
 
-        /* Модальное окно подтверждения */
         .confirm-modal {
             background: #1e3750;
             border-radius: 24px;
@@ -2058,13 +1849,11 @@
                 <!-- Блок армии -->
                 <div class="army-block">
                     <div class="card">
-                        <div class="army-title-container">
-                            <div class="card-title">
-                                <span class="swipe-hint" data-swipe="left">❮</span> ⚔️ АРМИЯ <span class="swipe-hint" data-swipe="right">❯</span>
-                            </div>
-                            <div class="army-total" id="totalArmy">0 ЕД.</div>
+                        <div class="card-title">
+                            <span class="swipe-hint" data-swipe="left">❮</span> ⚔️ АРМИЯ <span class="swipe-hint" data-swipe="right">❯</span>
                         </div>
                         <div class="army-grid" id="armyGrid"></div>
+                        <!-- Сюда будет добавлено общее количество армии из JS -->
                     </div>
                 </div>
             </div>
@@ -5048,7 +4837,10 @@
 
     function updateTotalArmy() {
         const total = units.reduce((sum, unit) => sum + unit.count, 0);
-        document.getElementById('totalArmy').textContent = `${total} ЕД.`;
+        const totalDiv = document.getElementById('armyTotalBottom');
+        if (totalDiv) {
+            totalDiv.textContent = `ВСЕГО: ${total} ед.`;
+        }
     }
 
     function renderArmy() {
@@ -5149,7 +4941,19 @@
             `;
             grid.appendChild(card);
         });
-        updateTotalArmy();
+
+        // Добавляем общее количество армии внизу
+        const armyCard = document.querySelector('.army-block .card');
+        // Удаляем старый элемент, если он был
+        const oldTotal = document.getElementById('armyTotalBottom');
+        if (oldTotal) oldTotal.remove();
+
+        const total = units.reduce((sum, unit) => sum + unit.count, 0);
+        const totalDiv = document.createElement('div');
+        totalDiv.id = 'armyTotalBottom';
+        totalDiv.className = 'army-total-bottom';
+        totalDiv.textContent = `ВСЕГО: ${total} ед.`;
+        armyCard.appendChild(totalDiv);
     }
 
     function createNumberPad() {
