@@ -296,11 +296,33 @@
             display: flex;
             width: 200%;
             transition: transform 0.3s ease;
+            align-items: stretch; /* обеспечивает одинаковую высоту дочерних блоков */
         }
+
+        /* Исправленные правила для выравнивания высоты блоков */
         .city-block, .army-block {
+            display: flex;
+            flex-direction: column;
             width: 50%;
             padding: 0 2px;
         }
+
+        .city-block .card {
+            height: auto; /* карточка города занимает только свою естественную высоту */
+        }
+
+        .army-block .card {
+            display: flex;
+            flex-direction: column;
+            flex: 1; /* карточка армии растягивается на всю высоту блока */
+        }
+
+        .army-block .card::after {
+            content: '';
+            display: block;
+            flex: 1; /* занимает всё свободное пространство под карточками */
+        }
+
         /* Подсказки свайпа в заголовках */
         .swipe-hint {
             font-size: 20px;
