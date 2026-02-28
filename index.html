@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>⭐ВЕРШИНА ОЛИМПА⭐</title>
     <style>
-        /* ========== СТИЛИ (оптимизированы по высоте) ========== */
+        /* ========== СТИЛИ ========== */
         * {
             margin: 0;
             padding: 0;
@@ -39,7 +39,7 @@
             top: 0;
             z-index: 100;
             background: #132a40;
-            padding: 5px 15px 3px 15px;
+            padding: 6px 15px 3px 15px;
         }
 
         .header {
@@ -49,12 +49,12 @@
             gap: 4px;
             background: #1e3750;
             border-radius: 18px;
-            padding: 4px 10px;
+            padding: 4px 12px;
             border: 1px solid #4a7a9c;
         }
 
         .title {
-            font-size: 22px;
+            font-size: 24px;
             font-weight: 800;
             color: #ffd700;
             text-align: center;
@@ -82,7 +82,7 @@
             align-items: center;
             gap: 2px;
             background: #2a4a6a;
-            padding: 4px 6px;
+            padding: 3px 5px;
             border-radius: 16px;
             border: 1px solid #5f9dc9;
             white-space: nowrap;
@@ -95,12 +95,12 @@
             font-size: 14px;
         }
         .resource .resource-value {
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             color: white;
         }
         .resource .resource-limit {
-            font-size: 10px;
+            font-size: 11px;
             color: #a0d0ff;
             margin-left: 1px;
         }
@@ -124,22 +124,22 @@
         .resources-card {
             background: #1e3750;
             border-radius: 18px;
-            padding: 6px 8px 8px 8px;
+            padding: 6px 10px 8px 10px; /* уменьшили верхний отступ */
             border: 1px solid #4a7a9c;
         }
 
         .resources-title {
             color: #ffd700;
-            font-size: 18px;
+            font-size: 18px; /* увеличили до 18px */
             font-weight: 800;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             text-align: center;
         }
 
         .resources-table {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
 
         .table-header {
@@ -154,7 +154,7 @@
 
         .header-cell {
             color: #a0d0ff;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             text-align: center;
         }
@@ -167,8 +167,8 @@
             display: grid;
             grid-template-columns: 100px 1fr 1fr 1fr;
             align-items: center;
-            padding: 3px 6px;
-            font-size: 12px;
+            padding: 2px 6px;
+            font-size: 13px;
         }
 
         .resource-name {
@@ -177,7 +177,7 @@
             gap: 6px;
             color: #a0d0ff;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
         }
 
         .resource-name .icon {
@@ -188,32 +188,32 @@
             color: #ffd700;
             font-weight: 600;
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .expense-value {
             color: #ff6b6b;
             font-weight: 600;
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .profit-value {
             color: #32cd32;
             font-weight: 600;
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
         }
 
         /* Таблица хранилища */
         .storage-table {
-            margin-top: 8px;
+            margin-top: 4px;
             border-top: 1px dashed #4a7a9c;
-            padding-top: 6px;
+            padding-top: 4px;
         }
         .storage-title {
             color: #ffd700;
-            font-size: 11px;
+            font-size: 12px;
             text-align: center;
             margin-bottom: 4px;
             text-transform: uppercase;
@@ -224,21 +224,21 @@
             grid-template-columns: 1fr 1fr 1fr;
             text-align: center;
             color: #a0d0ff;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
             background: #1e3f5a;
             border-radius: 6px;
-            padding: 4px;
-            margin-bottom: 2px;
+            padding: 2px;
+            margin-bottom: 1px;
         }
         .storage-row {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
             text-align: center;
             color: #ffd700;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
-            padding: 2px;
+            padding: 1px;
         }
         .storage-item {
             cursor: pointer;
@@ -250,7 +250,7 @@
         .card {
             background: #1e3750;
             border-radius: 18px;
-            padding: 6px 8px 8px 8px;
+            padding: 6px 10px 8px 10px; /* уменьшили верхний отступ */
             border: 1px solid #4a7a9c;
         }
 
@@ -258,52 +258,36 @@
             color: #ffd700;
             font-size: 18px;
             font-weight: 800;
-            margin-bottom: 6px;
+            margin-bottom: 6px; /* уменьшили */
             text-align: center;
         }
-        /* Приподнимаем угловые скобки */
-        .swipe-hint {
-            font-size: 20px;
-            line-height: 1;
-            vertical-align: middle;
-            margin: 0 4px;
-            color: #ffd700;
-            opacity: 0.7;
-            cursor: pointer;
-            display: inline-block;
-            transform: translateY(-2px); /* поднимаем скобки */
-        }
 
-        /* Стили для свайп-контейнера */
-        .swipe-container {
-            overflow: hidden;
+        /* Для армии добавляем контейнер заголовка */
+        .army-title-container {
+            position: relative;
             width: 100%;
+            margin-bottom: 6px; /* уменьшили */
         }
-        .swipe-wrapper {
-            display: flex;
-            width: 200%;
-            transition: transform 0.3s ease;
-            align-items: stretch;
+        .army-title-container .card-title {
+            margin-bottom: 0;
+            text-align: center;
         }
-
-        .city-block, .army-block {
-            display: flex;
-            flex-direction: column;
-            width: 50%;
-            padding: 0 2px;
-        }
-
-        .city-block .card {
-            height: auto;
-        }
-
-        .army-block .card {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
+        .army-title-container .army-total {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffd700;
+            text-transform: uppercase;
+            white-space: nowrap;
+            background: transparent;
+            border: none;
+            padding: 0;
         }
 
-        /* Стили для сетки города */
+        /* Подсказки свайпа в заголовках */
         .city-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -353,11 +337,11 @@
             left: 2px;
             background: #ffa500;
             color: black;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 800;
-            min-width: 18px;
-            height: 18px;
-            border-radius: 9px;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
             padding: 0 4px;
             display: flex;
             align-items: center;
@@ -378,7 +362,7 @@
             right: 2px;
             background: rgba(0, 0, 0, 0.7);
             color: #ffd700;
-            font-size: 9px;
+            font-size: 10px;
             font-weight: 700;
             padding: 2px 4px;
             border-radius: 4px;
@@ -387,7 +371,7 @@
         }
 
         .building-icon {
-            font-size: 20px;
+            font-size: 22px;
             line-height: 1;
             display: flex;
             align-items: center;
@@ -395,12 +379,11 @@
             margin-top: 14px;
             margin-bottom: 2px;
             z-index: 1;
-            transform: translateY(2px);
         }
 
         .building-name {
             color: #ffd700;
-            font-size: 7px;
+            font-size: 8px;
             font-weight: 700;
             text-align: center;
             text-transform: uppercase;
@@ -414,8 +397,7 @@
             padding: 0 2px;
             margin: 2px 0 4px 0;
             letter-spacing: 0.2px;
-            max-height: 18px;
-            transform: translateY(2px);
+            max-height: 20px;
         }
 
         .empty-cell {
@@ -482,18 +464,16 @@
             height: 16px;
         }
 
-        /* Армия */
         .army-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 4px;
-            margin-bottom: 8px;
         }
 
         .unit-card {
             background: #2a4a6a;
             border-radius: 12px;
-            padding: 4px 4px 4px 4px;
+            padding: 2px;
             border: 1px solid #b49450;
             position: relative;
         }
@@ -508,7 +488,7 @@
         .unit-name {
             color: #ffd700;
             font-weight: 700;
-            font-size: 13px;
+            font-size: 14px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
             cursor: pointer;
@@ -518,17 +498,15 @@
             background: #1e3f5a;
             border: 1px solid #ffd700;
             border-radius: 10px;
-            padding: 3px 8px;
-            font-size: 13px;
+            padding: 4px 10px;
+            font-size: 14px;
             font-weight: 700;
             color: white;
             cursor: pointer;
-            margin-top: 0;
-            margin-right: 2px;
         }
 
         .unit-capacity {
-            font-size: 9px;
+            font-size: 10px;
             color: #a0d0ff;
             text-align: left;
             margin-bottom: 2px;
@@ -542,9 +520,9 @@
             align-items: center;
             background: #1e3f5a;
             border-radius: 6px;
-            padding: 3px 5px;
+            padding: 4px 6px;
             margin-bottom: 2px;
-            font-size: 11px;
+            font-size: 12px;
         }
 
         .unit-stats-row span {
@@ -560,9 +538,9 @@
             justify-content: space-around;
             background: #1e3f5a;
             border-radius: 6px;
-            padding: 3px 4px;
+            padding: 4px 4px;
             margin-bottom: 2px;
-            font-size: 10px;
+            font-size: 11px;
         }
 
         .unit-resources span {
@@ -597,9 +575,9 @@
             background: #3a5f7a;
             border: 1px solid #ffd700;
             border-radius: 5px;
-            width: 28px;
-            height: 28px;
-            font-size: 16px;
+            width: 32px;
+            height: 32px;
+            font-size: 18px;
             font-weight: 700;
             color: white;
             cursor: pointer;
@@ -622,40 +600,38 @@
         }
 
         .counter-input {
-            width: 38px;
+            width: 45px;
             text-align: center;
             background: #1e3f5a;
             border: 1px solid #ffd700;
             border-radius: 5px;
             padding: 4px 0;
             color: white;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             cursor: pointer;
         }
-
-        .create-btn {
-            position: relative;
-            background: #2a5f7a;
-            border: 1px solid #ffd700;
-            border-radius: 6px;
-            padding: 4px 2px;
-            color: white;
-            font-weight: 700;
-            font-size: 11px;
-            cursor: pointer;
-            width: 100%;
-            text-align: center;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 2px;
-            text-transform: uppercase;
-            min-height: 34px;
-        }
-
+.create-btn {
+    position: relative;
+    background: #2a5f7a;
+    border: 1px solid #ffd700;
+    border-radius: 6px;
+    padding: 2px 4px; /* уменьшено с 4px 4px */
+    color: white;
+    font-weight: 700;
+    font-size: 11px; /* чуть меньше */
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    text-transform: uppercase;
+    min-height: 36px; /* было 40px */
+}
         .create-btn:active:not(:disabled) {
             background: #3a6f9a;
         }
@@ -695,18 +671,6 @@
             font-weight: 600;
         }
 
-        /* Общее количество армии внизу */
-        .army-total-bottom {
-            font-size: 16px;
-            font-weight: 800;
-            color: #ffd700;
-            text-align: center;
-            text-transform: uppercase;
-            margin-top: 6px;
-            padding-top: 4px;
-            border-top: 1px dashed #ffd700;
-        }
-
         /* УВЕЛИЧЕННОЕ НИЖНЕЕ МЕНЮ */
         .bottom-menu {
             position: sticky;
@@ -717,7 +681,7 @@
             display: flex;
             justify-content: space-between;
             align-items: stretch;
-            height: 52px;
+            height: 60px;
         }
 
         .menu-btn {
@@ -726,7 +690,7 @@
             border: none;
             border-right: 2px solid #ffd700;
             color: white;
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             text-transform: uppercase;
             cursor: pointer;
@@ -748,7 +712,7 @@
         }
 
         .menu-icon {
-            font-size: 22px;
+            font-size: 24px;
             filter: drop-shadow(0 2px 2px gold);
         }
 
@@ -762,12 +726,12 @@
             display: flex;
             align-items: center;
             gap: 4px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 600;
             color: #87cefa;
         }
 
-        /* Модальные окна: улучшенное центрирование и ограничение высоты */
+        /* Общие стили для модальных окон */
         .modal-overlay,
         .build-modal-overlay,
         .upgrade-modal-overlay,
@@ -776,8 +740,7 @@
         .market-exchange-modal-overlay,
         .lombard-choice-modal-overlay,
         .market-choice-modal-overlay,
-        .confirm-modal-overlay,
-        .notification-modal-overlay {
+        .confirm-modal-overlay {
             display: none;
             position: fixed;
             top: 0;
@@ -788,19 +751,31 @@
             z-index: 2000;
             align-items: center;
             justify-content: center;
-            padding: 10px;
+        }
+
+        .notification-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2100;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-overlay.active,
         .build-modal-overlay.active,
         .upgrade-modal-overlay.active,
+        .notification-modal-overlay.active,
         .construction-modal-overlay.active,
         .exchange-modal-overlay.active,
         .market-exchange-modal-overlay.active,
         .lombard-choice-modal-overlay.active,
         .market-choice-modal-overlay.active,
-        .confirm-modal-overlay.active,
-        .notification-modal-overlay.active {
+        .confirm-modal-overlay.active {
             display: flex;
         }
 
@@ -810,87 +785,9 @@
             border: 2px solid #ffd700;
             padding: 20px;
             width: 90%;
-            max-width: 340px;
-            max-height: 80vh;
-            overflow-y: auto;
+            max-width: 300px;
         }
 
-        /* Специально для окна строительства */
-        .build-modal {
-            background: #132a40;
-            border-radius: 28px;
-            border: 2px solid #ffd700;
-            width: 92%;
-            max-width: 340px;
-            max-height: 80vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
-        }
-
-        .buildings-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 12px;
-        }
-
-        /* Компактные карточки зданий */
-        .building-card {
-            background: #1a3349;
-            border: 2px solid #3a5f7a;
-            border-radius: 16px;
-            padding: 8px 8px;
-            margin-bottom: 6px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            transition: opacity 0.2s;
-            cursor: default;
-            position: relative;
-        }
-
-        .building-card .building-name {
-            font-size: 16px;
-            margin-bottom: 4px;
-        }
-
-        .stats-line {
-            gap: 8px;
-            margin-bottom: 4px;
-            font-size: 11px;
-        }
-
-        .building-desc {
-            font-size: 11px;
-            margin-bottom: 6px;
-        }
-
-        .profit-warning {
-            font-size: 10px;
-            margin-top: 3px;
-        }
-
-        .action-row {
-            gap: 4px;
-        }
-
-        .resources-line {
-            gap: 8px;
-        }
-
-        .resource-item {
-            font-size: 11px;
-        }
-
-        .build-btn {
-            padding: 4px 12px;
-            font-size: 11px;
-            min-width: 90px;
-        }
-
-        /* Остальные стили модальных окон без изменений */
         .modal-title {
             color: #ffd700;
             font-size: 18px;
@@ -1046,6 +943,250 @@
             background: #3a5f7a;
         }
 
+        .build-modal {
+            background: #132a40;
+            border-radius: 28px;
+            border: 2px solid #ffd700;
+            width: 92%;
+            max-width: 340px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .modal-header {
+            background: #1e3750;
+            padding: 14px 18px;
+            border-bottom: 2px solid #ffd700;
+            flex-shrink: 0;
+        }
+
+        .modal-header .modal-title {
+            color: #ffd700;
+            font-size: 20px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-align: center;
+            margin-bottom: 0;
+        }
+
+        .buildings-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            scrollbar-width: thin;
+            scrollbar-color: #ffd700 #2a4a6a;
+        }
+
+        .buildings-container::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .buildings-container::-webkit-scrollbar-track {
+            background: #2a4a6a;
+            border-radius: 10px;
+        }
+
+        .buildings-container::-webkit-scrollbar-thumb {
+            background: #ffd700;
+            border-radius: 10px;
+        }
+
+        .buildings-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .buildings-category {
+            margin-bottom: 8px;
+        }
+
+        .buildings-category-title {
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ffd700;
+            padding-bottom: 4px;
+        }
+
+        .building-card {
+            background: #1a3349;
+            border: 2px solid #3a5f7a;
+            border-radius: 16px;
+            padding: 12px 10px;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: opacity 0.2s;
+            cursor: default;
+            position: relative;
+        }
+
+        .building-card:hover {
+            background: #1e3f5a;
+        }
+
+        .building-card.disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .building-card .building-name {
+            color: #ffd700;
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            -webkit-line-clamp: 1;
+            max-height: none;
+            text-align: center;
+            width: 100%;
+        }
+
+        .stats-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 6px;
+            flex-wrap: wrap;
+            font-size: 13px;
+            width: 100%;
+        }
+
+        .income-items, .expense-items, .jobs-items {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .income-items {
+            color: #90EE90;
+        }
+        .expense-items {
+            color: #ffb6b6;
+        }
+        .jobs-items {
+            color: #a0d0ff;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .stat-icon {
+            font-size: 14px;
+        }
+
+        .building-desc {
+            color: #a0d0ff;
+            font-size: 13px;
+            margin-bottom: 10px;
+            font-style: italic;
+            text-align: center;
+            width: 100%;
+        }
+
+        .profit-warning {
+            color: #ff6b6b;
+            font-size: 12px;
+            margin-top: 5px;
+            font-weight: 600;
+        }
+
+        .card-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            margin: 8px 0 10px 0;
+            width: 100%;
+        }
+
+        .action-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .resources-line {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: nowrap;
+            width: 100%;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            color: #ffffff;
+            font-size: 13px;
+            white-space: nowrap;
+        }
+
+        .resource-icon {
+            font-size: 14px;
+        }
+
+        .resource-icon.capital { color: #ffd700; }
+        .resource-icon.materials { color: #a0d0ff; }
+        .resource-icon.energy { color: #87cefa; }
+
+        .resource-value.insufficient {
+            color: #ff6b6b;
+        }
+
+        .build-btn {
+            background: #2a5f7a;
+            border: none;
+            border-radius: 16px;
+            padding: 6px 16px;
+            color: white;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: 0 2px 0 #1a3b4f;
+            min-width: 110px;
+            transition: opacity 0.2s;
+        }
+
+        .build-btn:active:not(:disabled) {
+            transform: translateY(2px);
+            box-shadow: 0 1px 0 #1a3b4f;
+        }
+
+        .build-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .btn-time {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            color: #ffd700;
+            font-size: 12px;
+        }
+
         .close-btn {
             background: #6a2a2a;
             border: none;
@@ -1145,7 +1286,7 @@
         .upgrade-level-badge {
             background: #ffa500;
             color: black;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 800;
             padding: 2px 10px;
             border-radius: 14px;
@@ -1170,7 +1311,7 @@
             display: flex;
             align-items: center;
             gap: 3px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             white-space: nowrap;
         }
@@ -1184,14 +1325,14 @@
         }
 
         .upgrade-resource-item .icon {
-            font-size: 12px;
+            font-size: 13px;
         }
 
         .upgrade-military-item {
             display: flex;
             align-items: center;
             gap: 3px;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
             color: #87cefa;
         }
@@ -1201,7 +1342,7 @@
             align-items: center;
             gap: 3px;
             color: #a0d0ff;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: 700;
         }
 
@@ -1238,7 +1379,7 @@
 
         .upgrade-cost-title {
             color: #a0d0ff;
-            font-size: 9px;
+            font-size: 10px;
             margin-bottom: 5px;
             text-align: center;
             text-transform: uppercase;
@@ -1257,7 +1398,7 @@
             align-items: center;
             gap: 2px;
             color: white;
-            font-size: 11px;
+            font-size: 12px;
             white-space: nowrap;
         }
 
@@ -1272,11 +1413,11 @@
 
         .upgrade-btn {
             flex: 1;
-            height: 40px;
+            height: 42px;
             border: 1px solid #ffd700;
             border-radius: 8px;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 12px;
             cursor: pointer;
             text-transform: uppercase;
             display: flex;
@@ -1315,12 +1456,12 @@
 
         .btn-time-icon {
             color: #ffd700;
-            font-size: 10px;
+            font-size: 11px;
         }
 
         .btn-time-text {
             color: #ffd700;
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 600;
         }
 
@@ -1508,7 +1649,22 @@
             background: #3a6f8a;
         }
 
-        /* Остальные стили модальных окон обмена без изменений */
+        .close-btn {
+            background: #6a2a2a;
+            border: 1px solid #ffd700;
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            width: 100%;
+            text-transform: uppercase;
+            margin: 0 auto;
+            display: block;
+        }
+
+        /* Модальное окно обмена ломбарда */
         .exchange-modal,
         .market-exchange-modal {
             background: #1e3750;
@@ -1598,6 +1754,7 @@
             white-space: nowrap;
         }
 
+        /* для рынка убираем иконку и баланс */
         .market-exchange-modal .item-icon,
         .market-exchange-modal .item-balance {
             display: none;
@@ -1689,6 +1846,7 @@
             margin-top: 2px;
         }
 
+        /* Общие стили для кнопок в окнах обмена */
         .item-actions button {
             flex: 1;
             border: 1px solid #ffd700;
@@ -1705,11 +1863,13 @@
             opacity: 0.8;
         }
 
+        /* Ломбард: кнопки покупки и продажи (как у улучшения) */
         .exchange-modal .item-actions button.buy,
         .exchange-modal .item-actions button.sell {
             background: #2a5f7a;
         }
 
+        /* Рынок: все кнопки обмена (как у улучшения) */
         .market-exchange-modal .item-actions button {
             background: #2a5f7a;
             font-size: 14px;
@@ -1729,6 +1889,7 @@
             margin-top: 8px;
         }
 
+        /* Модальное окно подтверждения */
         .confirm-modal {
             background: #1e3750;
             border-radius: 24px;
@@ -1759,6 +1920,77 @@
             display: flex;
             gap: 10px;
         }
+/* Вкладки город/армия внутри одной карточки (исправленный браузерный стиль) */
+#cityArmyCard {
+    padding-top: 0; /* убираем лишний отступ сверху */
+    overflow: hidden; /* чтобы ничего не вылезало */
+}
+
+#cityArmyCard .card-header-tabs {
+    display: flex;
+    margin: 0 -10px 0 -10px; /* растягиваем на всю ширину карточки */
+    border-bottom: 1px solid #4a7a9c;
+    background: #1e3750;
+}
+
+#cityArmyCard .tab-title {
+    flex: 1;
+    text-align: center;
+    color: #a0d0ff;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    padding: 8px 0;
+    background: #1e3750;
+    transition: background 0.1s, color 0.1s;
+    border: none;
+    border-right: 1px solid #4a7a9c;
+    border-bottom: none; /* убираем нижнюю границу, она будет у контейнера */
+    margin-bottom: -1px; /* чтобы активная вкладка перекрывала границу */
+    position: relative;
+    z-index: 1;
+}
+
+#cityArmyCard .tab-title:last-child {
+    border-right: none;
+}
+
+#cityArmyCard .tab-title.active {
+    color: #ffd700;
+    background: #2a4a6a;
+    border-bottom: 1px solid #2a4a6a; /* сливается с фоном контента */
+    z-index: 2;
+}
+
+#cityArmyCard .tab-content-city,
+#cityArmyCard .tab-content-army {
+    display: none;
+    height: 420px; /* увеличено, чтобы вместить сетку + футер */
+    overflow-y: auto; /* если что-то не влезет, появится скролл, но вы можете заменить на hidden, если уверены */
+    background: #1e3750;
+    padding: 6px 0 0 0;
+}
+
+#cityArmyCard .tab-content-city.active,
+#cityArmyCard .tab-content-army.active {
+    display: block;
+}
+
+/* Скрываем старые заголовки внутри карточки (если они остались) */
+#cityArmyCard .card-title {
+    display: none;
+}
+/* Футеры для вкладок города и армии */
+.city-footer, .army-footer {
+    text-align: center;
+    color: #ffd700;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 4px 0 0 0;
+    border-top: 1px solid #4a7a9c;
+    margin-top: 6px;
+}
     </style>
 </head>
 <body>
@@ -1834,29 +2066,20 @@
             </div>
         </div>
 
-        <!-- Свайп-контейнер для города и армии -->
-        <div class="swipe-container" id="swipeContainer">
-            <div class="swipe-wrapper" id="swipeWrapper">
-                <!-- Блок города -->
-                <div class="city-block">
-                    <div class="card">
-                        <div class="card-title">
-                            <span class="swipe-hint" data-swipe="left">❮</span> 🏙️ ГОРОД <span class="swipe-hint" data-swipe="right">❯</span>
-                        </div>
-                        <div class="city-grid" id="cityGrid"></div>
-                    </div>
-                </div>
-                <!-- Блок армии -->
-                <div class="army-block">
-                    <div class="card">
-                        <div class="card-title">
-                            <span class="swipe-hint" data-swipe="left">❮</span> ⚔️ АРМИЯ <span class="swipe-hint" data-swipe="right">❯</span>
-                        </div>
-                        <div class="army-grid" id="armyGrid"></div>
-                        <!-- Сюда будет добавлено общее количество армии из JS -->
-                    </div>
-                </div>
+        <!-- Единая карточка с вкладками город/армия -->
+        <div class="card" id="cityArmyCard">
+            <div class="card-header-tabs">
+                <span class="tab-title active" data-tab="city">🏙️ ГОРОД</span>
+                <span class="tab-title" data-tab="army">⚔️ АРМИЯ</span>
             </div>
+            <div class="tab-content-city active">
+    <div class="city-grid" id="cityGrid"></div>
+    <div class="city-footer" id="cityRating">РЕЙТИНГ: 0</div>
+</div>
+<div class="tab-content-army">
+    <div class="army-grid" id="armyGrid"></div>
+    <div class="army-footer" id="armyTotal">ВСЕГО: 0 ед.</div>
+</div>
         </div>
     </div>
 
@@ -2605,6 +2828,7 @@
             updateResourcesTable();
             updateResourcesDisplay();
             renderArmy(); // Обновляем карточки юнитов при изменении лимитов
+            updateCityRating();
         } catch (e) {
             console.error('Ошибка при пересчёте статистики города:', e);
         }
@@ -2792,6 +3016,7 @@
             updateUsedBuildingsSet();
             updateSingleCell(cellIndex);
             recalcCityStats();
+            updateCityRating();
             if (currentConstructionCellIndex === cellIndex) {
                 closeConstructionModal();
             }
@@ -2805,20 +3030,21 @@
         }
     }
 
-    function cancelConstruction(cellIndex) {
-        const construction = activeConstructions.find(c => c.cellIndex === cellIndex);
-        if (!construction) return;
-        if (construction.targetLevel !== 1) {
-            showNotification('Нельзя отменить улучшение здания!');
-            return;
-        }
-        addResources(construction.cost);
-        activeConstructions = activeConstructions.filter(c => c.cellIndex !== cellIndex);
-        updateUsedBuildingsSet();
-        updateSingleCell(cellIndex);
-        closeConstructionModal();
+function cancelConstruction(cellIndex) {
+    const construction = activeConstructions.find(c => c.cellIndex === cellIndex);
+    if (!construction) return;
+    if (construction.targetLevel !== 1) {
+        showNotification('Нельзя отменить улучшение здания!');
+        return;
     }
-
+    addResources(construction.cost);
+    activeConstructions = activeConstructions.filter(c => c.cellIndex !== cellIndex);
+    updateUsedBuildingsSet();
+    updateSingleCell(cellIndex);
+    recalcCityStats();      // пересчитываем статистику города
+    updateCityRating();     // обновляем рейтинг
+    closeConstructionModal();
+}
     function updateSingleCell(cellIndex) {
         const cell = document.querySelector(`.city-cell[data-index="${cellIndex}"]`);
         if (!cell) return;
@@ -3083,6 +3309,7 @@
         updateSingleCell(indexA);
         updateSingleCell(indexB);
         recalcCityStats();
+        updateCityRating();
     }
 
     // Функция для обновления состояния кнопки улучшения при изменении ресурсов
@@ -3141,7 +3368,6 @@
                 activeArmyCreations = activeArmyCreations.filter(c => c !== creation);
             });
             renderArmy();
-            updateTotalArmy();
         } else {
             activeArmyCreations.forEach(creation => {
                 const unitId = creation.unitId;
@@ -4835,14 +5061,6 @@
         updateUnitResources(unitId);
     };
 
-    function updateTotalArmy() {
-        const total = units.reduce((sum, unit) => sum + unit.count, 0);
-        const totalDiv = document.getElementById('armyTotalBottom');
-        if (totalDiv) {
-            totalDiv.textContent = `ВСЕГО: ${total} ед.`;
-        }
-    }
-
     function renderArmy() {
         const grid = document.getElementById('armyGrid');
         grid.innerHTML = '';
@@ -4856,6 +5074,11 @@
                 materials: unit.resources.materials * amount,
                 energy: unit.resources.energy * amount
             };
+const totalUnits = units.reduce((sum, u) => sum + u.count, 0);
+const armyTotalEl = document.getElementById('armyTotal');
+if (armyTotalEl) {
+    armyTotalEl.textContent = `ВСЕГО: ${totalUnits} ед.`;
+}
             // Подсветка для следующего значения
             const nextAvailability = checkResourceAvailability(unit.id, amount + 1);
             const capitalClass = nextAvailability.capital ? 'resource-sufficient' : 'resource-insufficient';
@@ -4941,19 +5164,6 @@
             `;
             grid.appendChild(card);
         });
-
-        // Добавляем общее количество армии внизу
-        const armyCard = document.querySelector('.army-block .card');
-        // Удаляем старый элемент, если он был
-        const oldTotal = document.getElementById('armyTotalBottom');
-        if (oldTotal) oldTotal.remove();
-
-        const total = units.reduce((sum, unit) => sum + unit.count, 0);
-        const totalDiv = document.createElement('div');
-        totalDiv.id = 'armyTotalBottom';
-        totalDiv.className = 'army-total-bottom';
-        totalDiv.textContent = `ВСЕГО: ${total} ед.`;
-        armyCard.appendChild(totalDiv);
     }
 
     function createNumberPad() {
@@ -5148,67 +5358,59 @@
     let usedBuildingIds = new Set();
     let currentConstructionCellIndex = null;
 
-    // === Свайп ===
-    let swipeStartX = 0;
-    let swipeThreshold = 50; // минимальное расстояние для свайпа
-    let currentSwipeIndex = 0; // 0 - город, 1 - армия
+// Функция для подсчёта суммарного уровня всех зданий
+function calculateCityRating() {
+    let totalLevel = 0;
+    cityCells.forEach(cell => {
+        if (cell) {
+            totalLevel += cell.level;
+        }
+    });
+    return totalLevel;
+}
 
-    function initSwipe() {
-        const container = document.getElementById('swipeContainer');
-        const wrapper = document.getElementById('swipeWrapper');
-        container.addEventListener('touchstart', (e) => {
-            swipeStartX = e.touches[0].clientX;
-        });
-        container.addEventListener('touchend', (e) => {
-            if (!swipeStartX) return;
-            const diff = e.changedTouches[0].clientX - swipeStartX;
-            if (Math.abs(diff) > swipeThreshold) {
-                // Любой свайп переключает на противоположный блок (бесконечная карусель)
-                currentSwipeIndex = 1 - currentSwipeIndex;
-                wrapper.style.transform = `translateX(-${currentSwipeIndex * 50}%)`;
-            }
-            swipeStartX = 0;
-        });
-        // для мыши (опционально)
-        let mouseDown = false;
-        container.addEventListener('mousedown', (e) => {
-            mouseDown = true;
-            swipeStartX = e.clientX;
-        });
-        container.addEventListener('mouseup', (e) => {
-            if (!mouseDown || !swipeStartX) return;
-            const diff = e.clientX - swipeStartX;
-            if (Math.abs(diff) > swipeThreshold) {
-                currentSwipeIndex = 1 - currentSwipeIndex;
-                wrapper.style.transform = `translateX(-${currentSwipeIndex * 50}%)`;
-            }
-            mouseDown = false;
-            swipeStartX = 0;
-        });
-        container.addEventListener('mouseleave', () => {
-            mouseDown = false;
-            swipeStartX = 0;
-        });
-
-        // Обработчики для угловых скобок
-        document.querySelectorAll('.swipe-hint').forEach(hint => {
-            hint.addEventListener('click', () => {
-                currentSwipeIndex = 1 - currentSwipeIndex;
-                wrapper.style.transform = `translateX(-${currentSwipeIndex * 50}%)`;
-            });
-        });
+// Функция для обновления отображения рейтинга
+function updateCityRating() {
+    const ratingEl = document.getElementById('cityRating');
+    if (ratingEl) {
+        const rating = calculateCityRating();
+        ratingEl.textContent = `РЕЙТИНГ: ${rating}`;
     }
+}
 
+// Переключение вкладок город/армия
+function initCityArmyTabs() {
+    const cityTab = document.querySelector('#cityArmyCard .tab-title[data-tab="city"]');
+    const armyTab = document.querySelector('#cityArmyCard .tab-title[data-tab="army"]');
+    const cityContent = document.querySelector('#cityArmyCard .tab-content-city');
+    const armyContent = document.querySelector('#cityArmyCard .tab-content-army');
+    if (!cityTab || !armyTab || !cityContent || !armyContent) return;
+
+    cityTab.addEventListener('click', () => {
+        cityTab.classList.add('active');
+        armyTab.classList.remove('active');
+        cityContent.classList.add('active');
+        armyContent.classList.remove('active');
+    });
+
+    armyTab.addEventListener('click', () => {
+        armyTab.classList.add('active');
+        cityTab.classList.remove('active');
+        armyContent.classList.add('active');
+        cityContent.classList.remove('active');
+    });
+}
     function init() {
         updateUsedBuildingsSet();
         createNumberPad();
         renderArmy();
         renderCity();
+        initCityArmyTabs();
         recalcCityStats();
+        updateCityRating();
         updateResourcesDisplay();
         updateInterval = setInterval(processTimeTick, 200);
         setInterval(applyProfit, 1000);
-        initSwipe(); // инициализация свайпа
 
         document.getElementById('modalApply').onclick = applyManualInput;
         document.getElementById('modalCancel').onclick = closeModal;
