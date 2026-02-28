@@ -281,7 +281,10 @@ body.modal-open {
         }
 
         /* Подсказки свайпа в заголовках */
-        .city-grid {
+        .city-grid,
+        .army-grid {
+            flex: 1;                      /* занимает всё оставшееся место */
+            overflow-y: auto;              /* прокрутка, если элементов много */
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 4px;
@@ -305,6 +308,9 @@ body.modal-open {
             position: relative;
             overflow: hidden;
             transition: opacity 0.2s;
+            touch-action: pan-y;
+            -webkit-tap-highlight-color: transparent; /* убирает стандартную подсветку */
+            touch-action: manipulation;               /* ускоряет обработку касаний */
         }
 
         .city-cell.empty {
@@ -317,6 +323,7 @@ body.modal-open {
 
         .city-cell.dragging-origin {
             opacity: 0.3;
+            touch-action: none;
         }
 
         .city-cell.in-construction {
@@ -416,6 +423,7 @@ body.modal-open {
 
         /* Стили для перетаскивания */
         .drag-ghost {
+            position: fixed; 
             z-index: 10000;
             pointer-events: none;
             width: 70px;
@@ -1003,7 +1011,7 @@ position: fixed;
             background: #1a3349;
             border: 2px solid #3a5f7a;
             border-radius: 16px;
-            padding: 12px 10px;
+            padding: 8px 10px;
             margin-bottom: 8px;
             display: flex;
             flex-direction: column;
@@ -1028,7 +1036,7 @@ position: fixed;
             color: #ffd700;
             font-size: 18px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             -webkit-line-clamp: 1;
             max-height: none;
             text-align: center;
@@ -1039,8 +1047,8 @@ position: fixed;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            margin-bottom: 6px;
+            gap: 8px;
+            margin-bottom: 4px;
             flex-wrap: wrap;
             font-size: 13px;
             width: 100%;
@@ -1074,8 +1082,8 @@ position: fixed;
 
         .building-desc {
             color: #a0d0ff;
-            font-size: 13px;
-            margin-bottom: 10px;
+            font-size: 12px;
+            margin-bottom: 6px;
             font-style: italic;
             text-align: center;
             width: 100%;
@@ -1091,7 +1099,7 @@ position: fixed;
         .card-divider {
             height: 1px;
             background: linear-gradient(90deg, transparent, #ffd700, transparent);
-            margin: 8px 0 10px 0;
+            margin: 4px 0 6px 0;
             width: 100%;
         }
 
@@ -1099,7 +1107,7 @@ position: fixed;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             width: 100%;
         }
 
@@ -1107,7 +1115,7 @@ position: fixed;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 8px;
             flex-wrap: nowrap;
             width: 100%;
         }
@@ -1137,10 +1145,10 @@ position: fixed;
             background: #2a5f7a;
             border: none;
             border-radius: 16px;
-            padding: 6px 16px;
+            padding: 4px 12px;
             color: white;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             cursor: pointer;
             white-space: nowrap;
             display: flex;
@@ -1952,15 +1960,15 @@ position: fixed;
 #cityArmyCard .tab-content-city,
 #cityArmyCard .tab-content-army {
     display: none;
-    height: 378px; /* увеличено, чтобы вместить сетку + футер */
-    overflow-y: auto; /* если что-то не влезет, появится скролл, но вы можете заменить на hidden, если уверены */
+    height: 378px;                /* сохраняем общую высоту */
     background: #1e3750;
     padding: 6px 0 0 0;
+    flex-direction: column;
 }
 
 #cityArmyCard .tab-content-city.active,
 #cityArmyCard .tab-content-army.active {
-    display: block;
+    display: flex;                /* вместо display: block */
 }
 
 /* Скрываем старые заголовки внутри карточки (если они остались) */
@@ -1968,14 +1976,14 @@ position: fixed;
     display: none;
 }
 /* Футеры для вкладок города и армии (без линии, увеличенный шрифт) */
-.city-footer, .army-footer {
-    text-align: center;
-    color: #ffd700;
-    font-size: 16px;  /* увеличен */
+.city-footer,
+.army-footer {
+    padding: 2px 0 4px 0;         /* небольшие отступы */
+    margin: 0;                     /* убираем старый margin-top */
+    font-size: 16px;
     font-weight: 600;
-    padding: 2px 0 0 0;
-    /* border-top удалён */
-    margin-top: 2px; /* уменьшено */
+    color: #ffd700;
+    text-align: center;
 }
 /* Запрет выделения и лупы на всех интерактивных элементах */
 .counter-btn,
@@ -2141,12 +2149,12 @@ position: fixed;
                 <span class="tab-title" data-tab="army">⚔️ АРМИЯ</span>
             </div>
             <div class="tab-content-city active">
-    <div class="city-grid" id="cityGrid"></div>
     <div class="city-footer" id="cityRating">РЕЙТИНГ: 0</div>
+    <div class="city-grid" id="cityGrid"></div>
 </div>
 <div class="tab-content-army">
-    <div class="army-grid" id="armyGrid"></div>
     <div class="army-footer" id="armyTotal">ВСЕГО: 0 ед.</div>
+    <div class="army-grid" id="armyGrid"></div>
 </div>
 </div>
 <!-- УВЕЛИЧЕННОЕ НИЖНЕЕ МЕНЮ -->
@@ -3173,6 +3181,8 @@ let dragState = {
     startCellIndex: null,
     startX: 0,
     startY: 0,
+    currentX: 0,
+    currentY: 0,
     timeout: null,
     element: null,
     ghost: null,
@@ -3229,43 +3239,51 @@ function removeGhost() {
 function dragTouchStart(e) {
     const cell = e.currentTarget;
     const cellIndex = parseInt(cell.dataset.cellIndex);
-    // Если ячейка пуста или строится — не перехватываем событие, даём сработать обычному клику
     if (!cityCells[cellIndex] || isCellUnderConstruction(cellIndex)) {
-        return; // не вызываем preventDefault, чтобы не блокировать click
+        return;
     }
-    e.preventDefault(); // для занятых ячеек предотвращаем скролл при попытке перетаскивания
+    e.preventDefault();
     const touch = e.touches[0];
     dragState.startCellIndex = cellIndex;
     dragState.startX = touch.clientX;
     dragState.startY = touch.clientY;
+    dragState.currentX = touch.clientX;   // запоминаем текущие
+    dragState.currentY = touch.clientY;
     dragState.element = cell;
     dragState.moved = false;
+    
     dragState.timeout = setTimeout(() => {
         dragState.active = true;
         cell.classList.add('dragging-origin');
-        createGhost(cell, touch.clientX, touch.clientY);
+        document.documentElement.style.touchAction = 'none';
+        document.documentElement.style.userSelect = 'none';
+        // используем актуальные координаты
+        createGhost(cell, dragState.currentX, dragState.currentY);
     }, 500);
 }
 
 function dragTouchMove(e) {
-    e.preventDefault(); // предотвращаем скролл
+    const touch = e.touches[0];
+    // обновляем текущие координаты при любом движении
+    dragState.currentX = touch.clientX;
+    dragState.currentY = touch.clientY;
+
     if (dragState.active && dragState.ghost) {
-        const touch = e.touches[0];
+        e.preventDefault();
         updateGhostPosition(touch.clientX, touch.clientY);
-    } else {
-        if (dragState.startCellIndex !== null) {
-            const touch = e.touches[0];
-            const dx = touch.clientX - dragState.startX;
-            const dy = touch.clientY - dragState.startY;
-            const distance = Math.sqrt(dx*dx + dy*dy);
-            if (distance > 15) { // порог увеличен
-                clearTimeout(dragState.timeout);
-                dragState.moved = true;
-                dragState.active = false;
-                dragState.startCellIndex = null;
-                if (dragState.element) dragState.element.classList.remove('dragging-origin');
-                removeGhost();
-            }
+    } else if (dragState.startCellIndex !== null && !dragState.moved) {
+        const dx = touch.clientX - dragState.startX;
+        const dy = touch.clientY - dragState.startY;
+        const distance = Math.sqrt(dx*dx + dy*dy);
+        if (distance > 15) {
+            clearTimeout(dragState.timeout);
+            dragState.moved = true;
+            dragState.active = false;
+            dragState.startCellIndex = null;
+            if (dragState.element) dragState.element.classList.remove('dragging-origin');
+            removeGhost();
+            document.documentElement.style.touchAction = '';
+            document.documentElement.style.userSelect = '';
         }
     }
 }
@@ -3289,7 +3307,6 @@ function dragEnd(e) {
         }
     }
 
-    // Если перетаскивание было активно
     if (dragState.active && dragState.startCellIndex !== null) {
         e.preventDefault();
         if (targetCell) {
@@ -3298,34 +3315,37 @@ function dragEnd(e) {
                 swapBuildings(dragState.startCellIndex, targetIndex);
             }
         }
-    } 
-    // Если это было простое касание (без перетаскивания и без движения)
-    else if (!dragState.moved && dragState.element) {
+    } else if (!dragState.moved && dragState.element) {
         dragState.element.click();
     }
 
     if (dragState.element) dragState.element.classList.remove('dragging-origin');
     removeGhost();
+    document.documentElement.style.touchAction = '';
+    document.documentElement.style.userSelect = '';
     dragState.active = false;
     dragState.startCellIndex = null;
     dragState.element = null;
     dragState.moved = false;
+    dragState.currentX = dragState.currentY = 0; // сброс
 }
 
 function dragCancel(e) {
     clearTimeout(dragState.timeout);
     if (dragState.element) dragState.element.classList.remove('dragging-origin');
     removeGhost();
+    document.documentElement.style.touchAction = '';
+    document.documentElement.style.userSelect = '';
     dragState.active = false;
     dragState.startCellIndex = null;
     dragState.element = null;
+    dragState.currentX = dragState.currentY = 0;
 }
 
 function dragMouseDown(e) {
     e.preventDefault();
     const cell = e.currentTarget;
     const cellIndex = parseInt(cell.dataset.cellIndex);
-    // Если ячейка пуста — сразу открываем строительство и выходим
     if (!cityCells[cellIndex]) {
         openBuildModal(cellIndex);
         return;
@@ -3334,15 +3354,22 @@ function dragMouseDown(e) {
     dragState.startCellIndex = cellIndex;
     dragState.startX = e.clientX;
     dragState.startY = e.clientY;
+    dragState.currentX = e.clientX;   // запоминаем текущие
+    dragState.currentY = e.clientY;
     dragState.element = cell;
     dragState.moved = false;
+
     dragState.timeout = setTimeout(() => {
         dragState.active = true;
         cell.classList.add('dragging-origin');
-        createGhost(cell, e.clientX, e.clientY);
+        createGhost(cell, dragState.currentX, dragState.currentY); // используем последние координаты
     }, 500);
 
     function onMouseMove(e) {
+        // обновляем текущие координаты
+        dragState.currentX = e.clientX;
+        dragState.currentY = e.clientY;
+
         if (dragState.active && dragState.ghost) {
             updateGhostPosition(e.clientX, e.clientY);
         } else {
