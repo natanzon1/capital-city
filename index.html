@@ -206,40 +206,6 @@
         }
 
         /* Таблица хранилища */
-        .storage-table {
-            margin-top: 4px;
-            border-top: 1px dashed #4a7a9c;
-            padding-top: 4px;
-        }
-        .storage-title {
-            color: #ffd700;
-            font-size: 12px;
-            text-align: center;
-            margin-bottom: 4px;
-            text-transform: uppercase;
-            font-weight: 700;
-        }
-        .storage-header {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            text-align: center;
-            color: #a0d0ff;
-            font-size: 11px;
-            font-weight: 600;
-            background: #1e3f5a;
-            border-radius: 6px;
-            padding: 2px;
-            margin-bottom: 1px;
-        }
-        .storage-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            text-align: center;
-            color: #ffd700;
-            font-size: 13px;
-            font-weight: 600;
-            padding: 1px;
-        }
         .storage-item {
             cursor: pointer;
         }
@@ -1991,6 +1957,30 @@
     border-top: 1px solid #4a7a9c;
     margin-top: 6px;
 }
+/* Новые стили для строк хранилища внутри таблицы ресурсов */
+.storage-header-row .resource-name,
+.storage-header-row .income-value,
+.storage-header-row .expense-value,
+.storage-header-row .profit-value {
+    color: #a0d0ff;
+    font-weight: 600;
+    font-size: 12px;
+}
+.storage-values-row .income-value,
+.storage-values-row .expense-value,
+.storage-values-row .profit-value {
+    color: #ffd700;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+}
+.storage-values-row .resource-name {
+    color: #a0d0ff;
+    text-align: left;
+}
+.storage-values-row .resource-name .icon {
+    font-size: 16px;
+}
     </style>
 </head>
 <body>
@@ -2049,20 +2039,19 @@
                     <span class="profit-value" id="profitEnergy">0</span>
                 </div>
             </div>
-
-            <!-- Таблица хранилища -->
-            <div class="storage-table">
-                <div class="storage-title">В ХРАНИЛИЩЕ</div>
-                <div class="storage-header">
-                    <span>ЗОЛОТО</span>
-                    <span>МЕТАЛЛЫ</span>
-                    <span>ТОПЛИВО</span>
-                </div>
-                <div class="storage-row">
-                    <span class="storage-item" id="goldStorage">0 кг</span>
-                    <span class="storage-item" id="metalsStorage">0 кг</span>
-                    <span class="storage-item" id="fuelStorage">0 л</span>
-                </div>
+            <!-- Строка заголовков хранилища -->
+            <div class="table-row storage-header-row">
+                <span class="resource-name storage-title">В ХРАНИЛИЩЕ</span>
+                <span class="income-value">ЗОЛОТО</span>
+                <span class="expense-value">МЕТАЛЛЫ</span>
+                <span class="profit-value">ТОПЛИВО</span>
+            </div>
+            <!-- Строка значений хранилища -->
+            <div class="table-row storage-values-row">
+                <span class="resource-name"><span class="icon">🏦</span></span>
+                <span class="income-value storage-item" id="goldStorage">0 кг</span>
+                <span class="expense-value storage-item" id="metalsStorage">0 кг</span>
+                <span class="profit-value storage-item" id="fuelStorage">0 л</span>
             </div>
         </div>
 
@@ -3103,114 +3092,193 @@ function cancelConstruction(cellIndex) {
         setupDragListeners(cell, cellIndex);
     }
 
-    // === Перетаскивание зданий ===
-    let dragState = {
-        active: false,
-        startCellIndex: null,
-        startX: 0,
-        startY: 0,
-        timeout: null,
-        element: null,
-        ghost: null
-    };
+// === Перетаскивание зданий ===
+let dragState = {
+    active: false,
+    startCellIndex: null,
+    startX: 0,
+    startY: 0,
+    timeout: null,
+    element: null,
+    ghost: null,
+    moved: false
+};
 
-    function setupDragListeners(cell, cellIndex) {
-        cell.removeEventListener('touchstart', dragTouchStart);
-        cell.removeEventListener('touchend', dragEnd);
-        cell.removeEventListener('touchmove', dragTouchMove);
-        cell.removeEventListener('touchcancel', dragCancel);
-        cell.removeEventListener('mousedown', dragMouseDown);
-        cell.addEventListener('touchstart', dragTouchStart);
-        cell.addEventListener('touchend', dragEnd);
-        cell.addEventListener('touchmove', dragTouchMove);
-        cell.addEventListener('touchcancel', dragCancel);
-        cell.addEventListener('mousedown', dragMouseDown);
-        cell.dataset.cellIndex = cellIndex;
+function setupDragListeners(cell, cellIndex) {
+    cell.removeEventListener('touchstart', dragTouchStart);
+    cell.removeEventListener('touchend', dragEnd);
+    cell.removeEventListener('touchmove', dragTouchMove);
+    cell.removeEventListener('touchcancel', dragCancel);
+    cell.removeEventListener('mousedown', dragMouseDown);
+    cell.addEventListener('touchstart', dragTouchStart);
+    cell.addEventListener('touchend', dragEnd);
+    cell.addEventListener('touchmove', dragTouchMove);
+    cell.addEventListener('touchcancel', dragCancel);
+    cell.addEventListener('mousedown', dragMouseDown);
+    cell.dataset.cellIndex = cellIndex;
+}
+
+function createGhost(cell, clientX, clientY) {
+    const ghost = document.createElement('div');
+    ghost.className = 'drag-ghost';
+    const buildingData = cityCells[dragState.startCellIndex];
+    const building = getBuildingById(buildingData.id);
+    if (building) {
+        ghost.innerHTML = `
+            <div class="building-level-corner">${buildingData.level}</div>
+            <div class="building-icon">${building.icon}</div>
+            <div class="building-name">${building.name}</div>
+        `;
+    } else {
+        ghost.innerHTML = '<div class="building-icon">🏗️</div>';
     }
+    document.body.appendChild(ghost);
+    dragState.ghost = ghost;
+    updateGhostPosition(clientX, clientY);
+}
 
-    function createGhost(cell, clientX, clientY) {
-        const ghost = document.createElement('div');
-        ghost.className = 'drag-ghost';
-        const buildingData = cityCells[dragState.startCellIndex];
-        const building = getBuildingById(buildingData.id);
-        if (building) {
-            ghost.innerHTML = `
-                <div class="building-level-corner">${buildingData.level}</div>
-                <div class="building-icon">${building.icon}</div>
-                <div class="building-name">${building.name}</div>
-            `;
-        } else {
-            ghost.innerHTML = '<div class="building-icon">🏗️</div>';
-        }
-        document.body.appendChild(ghost);
-        dragState.ghost = ghost;
-        updateGhostPosition(clientX, clientY);
+function updateGhostPosition(clientX, clientY) {
+    if (dragState.ghost) {
+        dragState.ghost.style.left = clientX + 'px';
+        dragState.ghost.style.top = clientY + 'px';
     }
+}
 
-    function updateGhostPosition(clientX, clientY) {
-        if (dragState.ghost) {
-            dragState.ghost.style.left = clientX + 'px';
-            dragState.ghost.style.top = clientY + 'px';
-        }
+function removeGhost() {
+    if (dragState.ghost) {
+        dragState.ghost.remove();
+        dragState.ghost = null;
     }
+}
 
-    function removeGhost() {
-        if (dragState.ghost) {
-            dragState.ghost.remove();
-            dragState.ghost = null;
-        }
-    }
+function dragTouchStart(e) {
+    e.preventDefault();
+    const cell = e.currentTarget;
+    const cellIndex = parseInt(cell.dataset.cellIndex);
+    if (!cityCells[cellIndex] || isCellUnderConstruction(cellIndex)) return;
+    const touch = e.touches[0];
+    dragState.startCellIndex = cellIndex;
+    dragState.startX = touch.clientX;
+    dragState.startY = touch.clientY;
+    dragState.element = cell;
+    dragState.moved = false;
+    dragState.timeout = setTimeout(() => {
+        dragState.active = true;
+        cell.classList.add('dragging-origin');
+        createGhost(cell, touch.clientX, touch.clientY);
+    }, 500);
+}
 
-    function dragTouchStart(e) {
+function dragTouchMove(e) {
+    if (dragState.active && dragState.ghost) {
         e.preventDefault();
-        const cell = e.currentTarget;
-        const cellIndex = parseInt(cell.dataset.cellIndex);
-        if (!cityCells[cellIndex] || isCellUnderConstruction(cellIndex)) return;
         const touch = e.touches[0];
-        dragState.startCellIndex = cellIndex;
-        dragState.startX = touch.clientX;
-        dragState.startY = touch.clientY;
-        dragState.element = cell;
-        dragState.timeout = setTimeout(() => {
-            dragState.active = true;
-            cell.classList.add('dragging-origin');
-            createGhost(cell, touch.clientX, touch.clientY);
-        }, 500);
-    }
-
-    function dragTouchMove(e) {
-        if (dragState.active && dragState.ghost) {
-            e.preventDefault();
+        updateGhostPosition(touch.clientX, touch.clientY);
+    } else {
+        if (dragState.startCellIndex !== null) {
             const touch = e.touches[0];
-            updateGhostPosition(touch.clientX, touch.clientY);
-        } else {
-            clearTimeout(dragState.timeout);
-            dragState.active = false;
-            dragState.startCellIndex = null;
-            if (dragState.element) dragState.element.classList.remove('dragging-origin');
-            removeGhost();
+            const dx = touch.clientX - dragState.startX;
+            const dy = touch.clientY - dragState.startY;
+            const distance = Math.sqrt(dx*dx + dy*dy);
+            if (distance > 10) {
+                clearTimeout(dragState.timeout);
+                dragState.moved = true;
+                dragState.active = false;
+                dragState.startCellIndex = null;
+                if (dragState.element) dragState.element.classList.remove('dragging-origin');
+                removeGhost();
+            }
+        }
+    }
+}
+
+function dragEnd(e) {
+    clearTimeout(dragState.timeout);
+    let clientX, clientY;
+    if (e.changedTouches) {
+        clientX = e.changedTouches[0].clientX;
+        clientY = e.changedTouches[0].clientY;
+    } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+    }
+    const elementsAtDrop = document.elementsFromPoint(clientX, clientY);
+    let targetCell = null;
+    for (let el of elementsAtDrop) {
+        if (el.classList && el.classList.contains('city-cell')) {
+            targetCell = el;
+            break;
         }
     }
 
-    function dragEnd(e) {
-        clearTimeout(dragState.timeout);
-        if (!dragState.active || dragState.startCellIndex === null) {
-            dragState.active = false;
-            dragState.startCellIndex = null;
-            if (dragState.element) dragState.element.classList.remove('dragging-origin');
-            removeGhost();
-            return;
-        }
+    if (dragState.active && dragState.startCellIndex !== null) {
         e.preventDefault();
-        let clientX, clientY;
-        if (e.changedTouches) {
-            clientX = e.changedTouches[0].clientX;
-            clientY = e.changedTouches[0].clientY;
-        } else {
-            clientX = e.clientX;
-            clientY = e.clientY;
+        if (targetCell) {
+            const targetIndex = parseInt(targetCell.dataset.cellIndex);
+            if (targetIndex !== dragState.startCellIndex) {
+                swapBuildings(dragState.startCellIndex, targetIndex);
+            }
         }
-        const elementsAtDrop = document.elementsFromPoint(clientX, clientY);
+    } else if (!dragState.moved && dragState.element && targetCell === dragState.element) {
+        dragState.element.click();
+    }
+
+    if (dragState.element) dragState.element.classList.remove('dragging-origin');
+    removeGhost();
+    dragState.active = false;
+    dragState.startCellIndex = null;
+    dragState.element = null;
+    dragState.moved = false;
+}
+
+function dragCancel(e) {
+    clearTimeout(dragState.timeout);
+    if (dragState.element) dragState.element.classList.remove('dragging-origin');
+    removeGhost();
+    dragState.active = false;
+    dragState.startCellIndex = null;
+    dragState.element = null;
+}
+
+function dragMouseDown(e) {
+    e.preventDefault();
+    const cell = e.currentTarget;
+    const cellIndex = parseInt(cell.dataset.cellIndex);
+    if (!cityCells[cellIndex] || isCellUnderConstruction(cellIndex)) return;
+    dragState.startCellIndex = cellIndex;
+    dragState.startX = e.clientX;
+    dragState.startY = e.clientY;
+    dragState.element = cell;
+    dragState.moved = false;
+    dragState.timeout = setTimeout(() => {
+        dragState.active = true;
+        cell.classList.add('dragging-origin');
+        createGhost(cell, e.clientX, e.clientY);
+    }, 500);
+
+    function onMouseMove(e) {
+        if (dragState.active && dragState.ghost) {
+            updateGhostPosition(e.clientX, e.clientY);
+        } else {
+            if (dragState.startCellIndex !== null) {
+                const dx = e.clientX - dragState.startX;
+                const dy = e.clientY - dragState.startY;
+                const distance = Math.sqrt(dx*dx + dy*dy);
+                if (distance > 10) {
+                    clearTimeout(dragState.timeout);
+                    dragState.moved = true;
+                    dragState.active = false;
+                    dragState.startCellIndex = null;
+                    if (dragState.element) dragState.element.classList.remove('dragging-origin');
+                    removeGhost();
+                }
+            }
+        }
+    }
+
+    function onMouseUp(e) {
+        clearTimeout(dragState.timeout);
+        const elementsAtDrop = document.elementsFromPoint(e.clientX, e.clientY);
         let targetCell = null;
         for (let el of elementsAtDrop) {
             if (el.classList && el.classList.contains('city-cell')) {
@@ -3218,99 +3286,43 @@ function cancelConstruction(cellIndex) {
                 break;
             }
         }
-        if (targetCell) {
-            const targetIndex = parseInt(targetCell.dataset.cellIndex);
-            if (targetIndex !== dragState.startCellIndex) {
-                swapBuildings(dragState.startCellIndex, targetIndex);
-            }
-        }
-        dragState.element.classList.remove('dragging-origin');
-        removeGhost();
-        dragState.active = false;
-        dragState.startCellIndex = null;
-        dragState.element = null;
-    }
 
-    function dragCancel(e) {
-        clearTimeout(dragState.timeout);
+        if (dragState.active && dragState.startCellIndex !== null) {
+            if (targetCell) {
+                const targetIndex = parseInt(targetCell.dataset.cellIndex);
+                if (targetIndex !== dragState.startCellIndex) {
+                    swapBuildings(dragState.startCellIndex, targetIndex);
+                }
+            }
+        } else if (!dragState.moved && dragState.element && targetCell === dragState.element) {
+            dragState.element.click();
+        }
+
         if (dragState.element) dragState.element.classList.remove('dragging-origin');
         removeGhost();
         dragState.active = false;
         dragState.startCellIndex = null;
         dragState.element = null;
+        dragState.moved = false;
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
     }
 
-    function dragMouseDown(e) {
-        e.preventDefault();
-        const cell = e.currentTarget;
-        const cellIndex = parseInt(cell.dataset.cellIndex);
-        if (!cityCells[cellIndex] || isCellUnderConstruction(cellIndex)) return;
-        dragState.startCellIndex = cellIndex;
-        dragState.startX = e.clientX;
-        dragState.startY = e.clientY;
-        dragState.element = cell;
-        dragState.timeout = setTimeout(() => {
-            dragState.active = true;
-            cell.classList.add('dragging-origin');
-            createGhost(cell, e.clientX, e.clientY);
-        }, 500);
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+}
 
-        function onMouseMove(e) {
-            if (dragState.active && dragState.ghost) {
-                updateGhostPosition(e.clientX, e.clientY);
-            } else {
-                clearTimeout(dragState.timeout);
-                dragState.active = false;
-                dragState.startCellIndex = null;
-                if (dragState.element) dragState.element.classList.remove('dragging-origin');
-                removeGhost();
-                document.removeEventListener('mousemove', onMouseMove);
-                document.removeEventListener('mouseup', onMouseUp);
-            }
-        }
-
-        function onMouseUp(e) {
-            clearTimeout(dragState.timeout);
-            if (dragState.active) {
-                const elementsAtDrop = document.elementsFromPoint(e.clientX, e.clientY);
-                let targetCell = null;
-                for (let el of elementsAtDrop) {
-                    if (el.classList && el.classList.contains('city-cell')) {
-                        targetCell = el;
-                        break;
-                    }
-                }
-                if (targetCell) {
-                    const targetIndex = parseInt(targetCell.dataset.cellIndex);
-                    if (targetIndex !== dragState.startCellIndex) {
-                        swapBuildings(dragState.startCellIndex, targetIndex);
-                    }
-                }
-                dragState.element.classList.remove('dragging-origin');
-                removeGhost();
-            }
-            dragState.active = false;
-            dragState.startCellIndex = null;
-            dragState.element = null;
-            document.removeEventListener('mousemove', onMouseMove);
-            document.removeEventListener('mouseup', onMouseUp);
-        }
-
-        document.addEventListener('mousemove', onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-    }
-
-    function swapBuildings(indexA, indexB) {
-        if (indexA === indexB) return;
-        if (isCellUnderConstruction(indexA) || isCellUnderConstruction(indexB)) return;
-        const temp = cityCells[indexA];
-        cityCells[indexA] = cityCells[indexB];
-        cityCells[indexB] = temp;
-        updateSingleCell(indexA);
-        updateSingleCell(indexB);
-        recalcCityStats();
-        updateCityRating();
-    }
+function swapBuildings(indexA, indexB) {
+    if (indexA === indexB) return;
+    if (isCellUnderConstruction(indexA) || isCellUnderConstruction(indexB)) return;
+    const temp = cityCells[indexA];
+    cityCells[indexA] = cityCells[indexB];
+    cityCells[indexB] = temp;
+    updateSingleCell(indexA);
+    updateSingleCell(indexB);
+    recalcCityStats();
+    updateCityRating();
+}
 
     // Функция для обновления состояния кнопки улучшения при изменении ресурсов
     function refreshUpgradeButtonState() {
