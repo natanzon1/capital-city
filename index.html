@@ -39,7 +39,7 @@
             top: 0;
             z-index: 100;
             background: #132a40;
-            padding: 6px 15px 3px 15px;
+            padding: 4px 15px 4px 15px;
         }
 
         .header {
@@ -124,7 +124,7 @@
         .resources-card {
             background: #1e3750;
             border-radius: 18px;
-            padding: 6px 10px 8px 10px; /* уменьшили верхний отступ */
+            padding: 2px 10px 8px 10px; /* уменьшили верхний отступ */
             border: 1px solid #4a7a9c;
         }
 
@@ -222,7 +222,7 @@
         .card {
             background: #1e3750;
             border-radius: 18px;
-            padding: 6px 10px 8px 10px; /* уменьшили верхний отступ */
+            padding: 4px 10px 8px 10px; /* уменьшили верхний отступ */
             border: 1px solid #4a7a9c;
         }
 
@@ -230,7 +230,7 @@
             color: #ffd700;
             font-size: 18px;
             font-weight: 800;
-            margin-bottom: 6px; /* уменьшили */
+            margin-bottom: 2px; /* уменьшили */
             text-align: center;
         }
 
@@ -659,6 +659,7 @@
             justify-content: space-between;
             align-items: stretch;
             height: 60px;
+            will-change: transform;
         }
 
         .menu-btn {
@@ -688,9 +689,9 @@
             background: #2a4a6a;
         }
 
-        .menu-icon {
+       .menu-icon {
             font-size: 24px;
-            filter: drop-shadow(0 2px 2px gold);
+            text-shadow: 0 2px 4px gold; /* более безопасная альтернатива */
         }
 
         .menu-btn.shop .menu-icon,
@@ -1920,7 +1921,7 @@
     font-weight: 700;
     text-transform: uppercase;
     cursor: pointer;
-    padding: 8px 0;
+    padding: 6px 0;
     background: #1e3750;
     transition: background 0.1s, color 0.1s;
     border: none;
@@ -1966,7 +1967,7 @@
     color: #ffd700;
     font-size: 16px;  /* увеличен */
     font-weight: 600;
-    padding: 4px 0 0 0;
+    padding: 2px 0 0 0;
     /* border-top удалён */
     margin-top: 2px; /* уменьшено */
 }
@@ -2038,6 +2039,12 @@
     border-top: 1px dashed #4a7a9c;
     margin: 0 0 4px 0; /* отступ снизу можно подобрать */
     width: 100%;
+}
+.storage-value {
+    color: #ffd700; /* жёлтый, как у income-value */
+    font-weight: 600;
+    text-align: center;
+    font-size: 13px;
 }
     </style>
 </head>
@@ -2115,9 +2122,9 @@
             <!-- Строка значений хранилища -->
             <div class="table-row storage-values-row">
                 <span class="resource-name"><span class="icon">💎</span> В хранилище</span>
-                <span class="income-value storage-item" id="goldStorage">0 кг</span>
-                <span class="expense-value storage-item" id="metalsStorage">0 кг</span>
-                <span class="profit-value storage-item" id="fuelStorage">0 л</span>
+                <span class="storage-value storage-item" id="goldStorage">0 кг</span>
+                <span class="storage-value storage-item" id="metalsStorage">0 кг</span>
+                <span class="storage-value storage-item" id="fuelStorage">0 л</span>
             </div>
         </div>
 
@@ -3218,10 +3225,13 @@ function removeGhost() {
 }
 
 function dragTouchStart(e) {
-    e.preventDefault();
     const cell = e.currentTarget;
     const cellIndex = parseInt(cell.dataset.cellIndex);
-    if (!cityCells[cellIndex] || isCellUnderConstruction(cellIndex)) return;
+    // Если ячейка пуста или строится — не перехватываем событие, даём сработать обычному клику
+    if (!cityCells[cellIndex] || isCellUnderConstruction(cellIndex)) {
+        return; // не вызываем preventDefault, чтобы не блокировать click
+    }
+    e.preventDefault(); // для занятых ячеек предотвращаем скролл при попытке перетаскивания
     const touch = e.touches[0];
     dragState.startCellIndex = cellIndex;
     dragState.startX = touch.clientX;
