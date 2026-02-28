@@ -1923,7 +1923,6 @@ position: fixed;
 #cityArmyCard .card-header-tabs {
     display: flex;
     margin: 0 -10px 0 -10px; /* растягиваем на всю ширину карточки */
-    border-bottom: 1px solid #4a7a9c;
     background: #1e3750;
 }
 
@@ -1936,24 +1935,25 @@ position: fixed;
     text-transform: uppercase;
     cursor: pointer;
     padding: 6px 0;
-    background: #1e3750;
+    background: #1a3245; 
     transition: background 0.1s, color 0.1s;
     border: none;
-    border-right: 1px solid #4a7a9c;
-    border-bottom: none; /* убираем нижнюю границу, она будет у контейнера */
-    margin-bottom: -1px; /* чтобы активная вкладка перекрывала границу */
+    border-bottom: 1px solid #4a7a9c;
+    border-right: 1px solid #4a7a9c;   /* вертикальный разделитель */
+    margin-bottom:  0;
     position: relative;
     z-index: 1;
 }
 
-#cityArmyCard .tab-title:last-child {
-    border-right: none;
+#cityArmyCard .tab-title.active:last-child {
+    border-right: none;                 /* чтобы у последней активной тоже не было правой границы */
 }
 
 #cityArmyCard .tab-title.active {
-    color: #ffd700;
-    background: #2a4a6a;
-    border-bottom: 1px solid #2a4a6a; /* сливается с фоном контента */
+    color: #ffd700;                  /* золотой для активной */
+    background: #1e3750;              /* фон как у содержимого */
+    border:: 1px solid #4a7a9c;  /* полная рамка */
+    border-bottom-color: #1e3750;       /* нижняя граница сливается с фоном контента */
     z-index: 2;
 }
 
@@ -3346,7 +3346,7 @@ function dragMouseDown(e) {
     e.preventDefault();
     const cell = e.currentTarget;
     const cellIndex = parseInt(cell.dataset.cellIndex);
-    if (!cityCells[cellIndex]) {
+    if (!cityCells[cellIndex] && !isCellUnderConstruction(cellIndex)) {
         openBuildModal(cellIndex);
         return;
     }
