@@ -132,7 +132,7 @@
             color: #ffd700;
             font-size: 18px; /* увеличили до 18px */
             font-weight: 800;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             text-align: center;
         }
 
@@ -143,14 +143,20 @@
         }
 
         .table-header {
-            display: grid;
-            grid-template-columns: 100px 1fr 1fr 1fr;
-            background: #1e3f5a;
-            border: 1px solid #4a7a9c;
-            border-radius: 6px;
-            padding: 4px 6px;
-            margin-bottom: 2px;
-        }
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr 1fr;
+    /* убраны фон, границы, скругление и внутренние отступы */
+    margin-bottom: 0; /* убираем отступ снизу, потом добавим общий отступ */
+}
+.header-cell {
+    color: #a0d0ff;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+}
+.header-cell:first-child {
+    text-align: left;
+}
 
         .header-cell {
             color: #a0d0ff;
@@ -449,6 +455,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 2px;
+            padding: 0 2px; /* добавить, если нужно */
         }
 
         .unit-name {
@@ -464,11 +471,13 @@
             background: #1e3f5a;
             border: 1px solid #ffd700;
             border-radius: 10px;
-            padding: 4px 10px;
+            padding: 4px 12px 4px 12px;
             font-size: 14px;
             font-weight: 700;
             color: white;
             cursor: pointer;
+            margin-right: 4px; /* дополнительный отступ справа */
+            margin-top: 2px;  /* небольшой отступ сверху */
         }
 
         .unit-capacity {
@@ -527,6 +536,7 @@
         .unit-control {
             display: flex;
             flex-direction: column;
+            align-items: center; /* центрируем содержимое */
             gap: 2px;
         }
 
@@ -541,9 +551,9 @@
             background: #3a5f7a;
             border: 1px solid #ffd700;
             border-radius: 5px;
-            width: 32px;
-            height: 32px;
-            font-size: 18px;
+            width: 28px;
+            height: 28px;
+            font-size: 16px;
             font-weight: 700;
             color: white;
             cursor: pointer;
@@ -566,14 +576,14 @@
         }
 
         .counter-input {
-            width: 45px;
+            width: 40px;
             text-align: center;
             background: #1e3f5a;
             border: 1px solid #ffd700;
             border-radius: 5px;
             padding: 4px 0;
             color: white;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
         }
@@ -582,12 +592,13 @@
     background: #2a5f7a;
     border: 1px solid #ffd700;
     border-radius: 6px;
-    padding: 2px 4px; /* уменьшено с 4px 4px */
+    padding: 2px 4px;
     color: white;
     font-weight: 700;
-    font-size: 11px; /* чуть меньше */
+    font-size: 11px;
     cursor: pointer;
-    width: 100%;
+    width: 110px; /* фиксированная ширина */
+    margin: 0 auto; /* центрирование */
     text-align: center;
     overflow: hidden;
     display: flex;
@@ -596,7 +607,7 @@
     justify-content: center;
     gap: 1px;
     text-transform: uppercase;
-    min-height: 36px; /* было 40px */
+    min-height: 32px;
 }
         .create-btn:active:not(:disabled) {
             background: #3a6f9a;
@@ -1890,6 +1901,8 @@
 #cityArmyCard {
     padding-top: 0; /* убираем лишний отступ сверху */
     overflow: hidden; /* чтобы ничего не вылезало */
+    flex-shrink: 0; /* карточка не будет сжиматься */
+
 }
 
 #cityArmyCard .card-header-tabs {
@@ -1932,7 +1945,7 @@
 #cityArmyCard .tab-content-city,
 #cityArmyCard .tab-content-army {
     display: none;
-    height: 420px; /* увеличено, чтобы вместить сетку + футер */
+    height: 385px; /* увеличено, чтобы вместить сетку + футер */
     overflow-y: auto; /* если что-то не влезет, появится скролл, но вы можете заменить на hidden, если уверены */
     background: #1e3750;
     padding: 6px 0 0 0;
@@ -1947,39 +1960,84 @@
 #cityArmyCard .card-title {
     display: none;
 }
-/* Футеры для вкладок города и армии */
+/* Футеры для вкладок города и армии (без линии, увеличенный шрифт) */
 .city-footer, .army-footer {
     text-align: center;
     color: #ffd700;
-    font-size: 14px;
+    font-size: 16px;  /* увеличен */
     font-weight: 600;
     padding: 4px 0 0 0;
-    border-top: 1px solid #4a7a9c;
-    margin-top: 6px;
+    /* border-top удалён */
+    margin-top: 2px; /* уменьшено */
 }
-/* Новые стили для строк хранилища внутри таблицы ресурсов */
-.storage-header-row .resource-name,
+/* Запрет выделения и лупы на всех интерактивных элементах */
+.counter-btn,
+.counter-input,
+.create-btn,
+.unit-name,
+.unit-count,
+.storage-item,
+.resource,
+.tab-title,
+.menu-btn,
+.build-btn,
+.choice-btn,
+.close-btn,
+.modal-btn,
+.number-btn {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Для input оставляем возможность редактирования, но лупа не должна появляться */
+.counter-input {
+    user-select: text; /* можно выделять текст, но лупа не появится */
+    -webkit-user-select: text;
+}
+/* Скрываем скроллбары в блоках города и армии */
+#cityArmyCard .tab-content-city::-webkit-scrollbar,
+#cityArmyCard .tab-content-army::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+#cityArmyCard .tab-content-city,
+#cityArmyCard .tab-content-army {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer / Edge */
+}
+/* Стили для строк хранилища */
 .storage-header-row .income-value,
 .storage-header-row .expense-value,
 .storage-header-row .profit-value {
-    color: #a0d0ff;
+    color: #a0d0ff;      /* голубоватый цвет, как у заголовков таблицы */
+    font-size: 12px;     /* прежний размер */
     font-weight: 600;
-    font-size: 12px;
 }
-.storage-values-row .income-value,
-.storage-values-row .expense-value,
-.storage-values-row .profit-value {
-    color: #ffd700;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-}
+
 .storage-values-row .resource-name {
-    color: #a0d0ff;
-    text-align: left;
+    white-space: nowrap; /* запрещаем перенос текста "💎 В хранилище" */
+    font-size: 13px;     /* оставляем как у обычных названий ресурсов */
 }
-.storage-values-row .resource-name .icon {
-    font-size: 16px;
+/* Пунктирная линия-разделитель в блоке ресурсов */
+.divider-row {
+    border-top: 1px dashed #4a7a9c;
+    padding: 0 !important;  /* убираем отступы, чтобы линия была тонкой */
+    height: 0;              /* не занимает места */
+    overflow: hidden;
+}
+.divider-row span {
+    display: none;          /* скрываем содержимое ячеек */
+}
+/* Пунктирная линия под заголовком блока ресурсов */
+.title-divider {
+    border-top: 1px dashed #4a7a9c;
+    margin: 0 0 4px 0; /* отступ снизу можно подобрать */
+    width: 100%;
 }
     </style>
 </head>
@@ -2013,6 +2071,7 @@
         <!-- Карточка ресурсов -->
         <div class="resources-card">
             <div class="resources-title">📊 РЕСУРСЫ</div>
+            <div class="title-divider"></div>
             <div class="resources-table">
                 <div class="table-header">
                     <span class="header-cell"></span>
@@ -2039,16 +2098,23 @@
                     <span class="profit-value" id="profitEnergy">0</span>
                 </div>
             </div>
+            <!-- Разделитель -->
+            <div class="table-row divider-row">
+                <span class="resource-name"></span>
+                <span class="income-value"></span>
+                <span class="expense-value"></span>
+                <span class="profit-value"></span>
+            </div>
             <!-- Строка заголовков хранилища -->
             <div class="table-row storage-header-row">
-                <span class="resource-name storage-title">В ХРАНИЛИЩЕ</span>
+                <span class="resource-name"></span>
                 <span class="income-value">ЗОЛОТО</span>
                 <span class="expense-value">МЕТАЛЛЫ</span>
                 <span class="profit-value">ТОПЛИВО</span>
             </div>
             <!-- Строка значений хранилища -->
             <div class="table-row storage-values-row">
-                <span class="resource-name"><span class="icon">🏦</span></span>
+                <span class="resource-name"><span class="icon">💎</span> В хранилище</span>
                 <span class="income-value storage-item" id="goldStorage">0 кг</span>
                 <span class="expense-value storage-item" id="metalsStorage">0 кг</span>
                 <span class="profit-value storage-item" id="fuelStorage">0 л</span>
@@ -3170,8 +3236,8 @@ function dragTouchStart(e) {
 }
 
 function dragTouchMove(e) {
+    e.preventDefault(); // предотвращаем скролл
     if (dragState.active && dragState.ghost) {
-        e.preventDefault();
         const touch = e.touches[0];
         updateGhostPosition(touch.clientX, touch.clientY);
     } else {
@@ -3180,7 +3246,7 @@ function dragTouchMove(e) {
             const dx = touch.clientX - dragState.startX;
             const dy = touch.clientY - dragState.startY;
             const distance = Math.sqrt(dx*dx + dy*dy);
-            if (distance > 10) {
+            if (distance > 15) { // порог увеличен
                 clearTimeout(dragState.timeout);
                 dragState.moved = true;
                 dragState.active = false;
@@ -3211,6 +3277,7 @@ function dragEnd(e) {
         }
     }
 
+    // Если перетаскивание было активно
     if (dragState.active && dragState.startCellIndex !== null) {
         e.preventDefault();
         if (targetCell) {
@@ -3219,7 +3286,9 @@ function dragEnd(e) {
                 swapBuildings(dragState.startCellIndex, targetIndex);
             }
         }
-    } else if (!dragState.moved && dragState.element && targetCell === dragState.element) {
+    } 
+    // Если это было простое касание (без перетаскивания и без движения)
+    else if (!dragState.moved && dragState.element) {
         dragState.element.click();
     }
 
@@ -3244,7 +3313,12 @@ function dragMouseDown(e) {
     e.preventDefault();
     const cell = e.currentTarget;
     const cellIndex = parseInt(cell.dataset.cellIndex);
-    if (!cityCells[cellIndex] || isCellUnderConstruction(cellIndex)) return;
+    // Если ячейка пуста — сразу открываем строительство и выходим
+    if (!cityCells[cellIndex]) {
+        openBuildModal(cellIndex);
+        return;
+    }
+    if (isCellUnderConstruction(cellIndex)) return;
     dragState.startCellIndex = cellIndex;
     dragState.startX = e.clientX;
     dragState.startY = e.clientY;
